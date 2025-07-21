@@ -1,16 +1,17 @@
-import React from 'react'
-import Header from '../components/Header.jsx'
-import Hero from '../components/Hero.jsx'
+import React from "react";
+import "./HomePage.css";
+import Header from "../components/Header.jsx"
+import Hero from "../components/Hero.jsx"
+import Footer from "../components/Footer.jsx"
 
-const Homepage = () => {
+const HomePage = () => {
   return (
     <>
-    <Header />
-    <Hero />
-    
+      <Header/>
+      <Hero/>
+      <Footer/>
     </>
+  );
+};
 
-  )
-}
-
-export default Homepage
+export default HomePage;

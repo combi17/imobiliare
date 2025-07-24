@@ -7,9 +7,7 @@ import Footer from "../components/Footer.jsx"
 const HomePage = () => {
   return (
     <>
-      <Header/>
       <Hero/>
-      <Footer/>
     </>
   );
 };

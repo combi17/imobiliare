@@ -9,7 +9,7 @@ const Header = () => {
           <div className="logo">Premium East8</div>
           <ul className="nav-links">
             <li><a href="#proprietati">Proprietăți</a></li>
-            <li><a href="#servicii">Servicii</a></li>
+            <li><a href="#servicii">Portofoliu</a></li>
             <li><a href="#despre">Despre</a></li>
             <li><a href="#contact">Contact</a></li>
           </ul>

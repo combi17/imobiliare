@@ -6,7 +6,7 @@ import birou3 from "../assets/birou3.jpg";
 import apart1 from "../assets/apart1.jpg";
 import apart2 from "../assets/apart2.jpg";
 import house1 from "../assets/house1.jpg";
-import HeroCard from "./HeroCard.jsx";
+import SearchCard from "./SearchCard.jsx";
 
 const images = [birou1, birou2, birou3, apart1, apart2, house1];
 
@@ -35,7 +35,7 @@ const Slideshow = () => {
       <div className="gradient-overlay"></div>
 
       <div className="slideshow-content">
-        <HeroCard/>
+        <SearchCard/>
       </div>
     </section>
   );

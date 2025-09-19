@@ -76,6 +76,9 @@ const Properties = () => {
 
   // harta Leaflet
   useEffect(() => {
+    // Only initialize map if we need it
+    if (viewMode === 'list') return;
+
     const map = L.map('map', {
       center: [44.4268, 26.1025],
       zoom: 13,
@@ -107,7 +110,7 @@ const Properties = () => {
     return () => {
       map.remove();
     };
-  }, [properties]);
+  }, [properties, viewMode]);
 
   return (
     <div className="properties-page">
@@ -250,7 +253,7 @@ const Properties = () => {
                   className="sort-button"
                   onClick={() => setShowSortDropdown(!showSortDropdown)}
                 >
-                  Sortează
+                  Sortează după
                   <ChevronDown size={16} />
                 </button>
                 {showSortDropdown && (
@@ -295,37 +298,35 @@ const Properties = () => {
                     <div className="property-main-info">
                       <div className="property-header">
                         <h3 className="property-title">{property.title}</h3>
-                        <div className="property-price">€{property.price.toLocaleString()}</div>
+                        <div className="property-price">€{property.price}</div>
                       </div>
 
                       <div className="property-location">
-                        <MapPin size={16} />
+                        <MapPin size={14} />
                         <span>{property.zone}</span>
                       </div>
 
                       <p className="property-description">{property.description}</p>
-                    </div>
 
-                    <div className="property-bottom-info">
                       <div className="property-details">
                         <div className="detail-item">
-                          <Maximize size={16} />
+                          <Maximize size={14} />
                           <span>{property.surface} mp</span>
                         </div>
                         <div className="detail-item">
-                          <Home size={16} />
+                          <Home size={14} />
                           <span>{property.rooms} camere</span>
                         </div>
                         <div className="detail-item">
-                          <Bath size={16} />
+                          <Bath size={14} />
                           <span>{property.bathrooms} băi</span>
                         </div>
                       </div>
+                    </div>
 
-                      <div className="property-footer">
-                        <span className="property-year">Construit în {property.year}</span>
-                        <button className="view-details-btn">Vezi detalii</button>
-                      </div>
+                    <div className="property-footer">
+                      <span className="property-year">Construit în {property.year}</span>
+                      <button className="view-details-btn">Vezi detalii</button>
                     </div>
                   </div>
                 </div>
@@ -334,7 +335,13 @@ const Properties = () => {
           </main>
         )}
 
-        {viewMode !== 'lista' && (
+        {viewMode === 'split' && (
+          <div className="map-container">
+            <div id="map" className="map"></div>
+          </div>
+        )}
+
+        {viewMode === 'map' && (
           <div className="map-container">
             <div id="map" className="map"></div>
           </div>

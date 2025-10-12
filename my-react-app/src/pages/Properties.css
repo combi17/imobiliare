@@ -1,530 +1,351 @@
-.properties-page {
-          min-height: 100vh;
-          background: var(--white);
-          padding-top: 100px;
-        }
-
-        /* View Header */
-        .view-header {
-          background: var(--white);
-          border-bottom: 1px solid var(--accent-subtle);
-          position: sticky;
-          top: 5rem;
-          z-index: 200;
-        }
-
-        .view-controls {
-          max-width: 1400px;
-          margin: 0 auto;
-          display: flex;
-          gap: 1rem;
-        }
-
-        .view-btn {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          padding: 0.75rem 1.5rem;
-          border: 2px solid var(--accent-subtle);
-          background: var(--white);
-          color: var(--dark-gray);
-          border-radius: 25px;
-          font-weight: 500;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          margin-top: 0.75rem;
-          margin-bottom: 0.75rem;
-        }
-
-        .view-btn:hover,
-        .view-btn.active {
-          border-color: var(--primary);
-          background: var(--primary);
-          color: white;
-        }
-
-        /* Main Content Layouts */
-        .main-content {
-          max-width: 1400px;
-          margin: 0 auto;
-          padding: 2rem 5%;
-          display: grid;
-          gap: 2rem;
-          min-height: calc(100vh - 200px);
-        }
-
-        .main-content.list {
-          grid-template-columns: 280px 1fr;
-        }
-
-        .main-content.split {
-          grid-template-columns: 280px 1fr 500px;
-          gap: 2rem;
-        }
-
-        .main-content.map {
-          grid-template-columns: 1fr;
-          padding: 2rem 5%;
-          gap: 0;
-        }
-
-        /* Filters Sidebar */
-        .filters-sidebar {
-          background: var(--white);
-          border: 1px solid var(--accent-subtle);
-          border-radius: 20px;
-          padding: 1.5rem;
-          height: fit-content;
-          position: sticky;
-          top: 180px;
-        }
-
-        .filters-header {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          margin-bottom: 2rem;
-          padding-bottom: 1rem;
-          border-bottom: 1px solid var(--accent-subtle);
-        }
-
-        .filters-header h3 {
-          color: var(--navy);
-          font-size: 1.2rem;
-          font-weight: 600;
-        }
-
-        .filter-group {
-          margin-bottom: 1.5rem;
-        }
-
-        .filter-group label {
-          display: block;
-          margin-bottom: 0.5rem;
-          color: var(--navy);
-          font-weight: 500;
-          font-size: 0.9rem;
-        }
-
-        .filter-group select,
-        .filter-group input {
-          width: 100%;
-          padding: 0.75rem;
-          border: 1px solid var(--accent-subtle);
-          border-radius: 8px;
-          background: var(--white);
-          color: var(--dark-gray);
-          font-size: 0.9rem;
-          transition: all 0.3s ease;
-        }
-
-        .filter-group select:focus,
-        .filter-group input:focus {
-          outline: none;
-          border-color: var(--primary);
-          box-shadow: 0 0 0 2px rgba(29, 163, 151, 0.1);
-        }
-
-        .range-inputs {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 0.5rem;
-        }
-
-        .clear-filters {
-          width: 100%;
-          padding: 0.75rem;
-          background: var(--light-gray);
-          color: var(--dark-gray);
-          border: 1px solid var(--accent-subtle);
-          border-radius: 8px;
-          font-weight: 500;
-          cursor: pointer;
-          transition: all 0.3s ease;
-        }
-
-        .clear-filters:hover {
-          background: var(--accent-subtle);
-        }
-
-        /* Properties List */
-        .properties-list {
-          min-height: 600px;
-        }
-
-        .results-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 2rem;
-        }
-
-        .results-header h2 {
-          color: var(--navy);
-          font-size: 1.5rem;
-          font-weight: 600;
-        }
-
-        /* Sort Dropdown */
-        .sort-dropdown {
-          position: relative;
-        }
-
-        .sort-button {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          padding: 0.75rem 1rem;
-          border: 1px solid var(--accent-subtle);
-          background: var(--white);
-          color: var(--dark-gray);
-          border-radius: 8px;
-          font-weight: 500;
-          cursor: pointer;
-          transition: all 0.3s ease;
-        }
-
-        .sort-button:hover {
-          border-color: var(--primary);
-        }
-
-        .sort-options {
-          position: absolute;
-          top: 100%;
-          right: 0;
-          background: var(--white);
-          border: 1px solid var(--accent-subtle);
-          border-radius: 8px;
-          box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-          z-index: 10;
-          min-width: 200px;
-          margin-top: 0.5rem;
-        }
-
-        .sort-options button {
-          width: 100%;
-          padding: 0.75rem 1rem;
-          border: none;
-          background: transparent;
-          color: var(--dark-gray);
-          text-align: left;
-          cursor: pointer;
-          transition: background 0.3s ease;
-        }
-
-        .sort-options button:hover {
-          background: var(--light-gray);
-        }
-
-        .sort-options button:first-child {
-          border-radius: 8px 8px 0 0;
-        }
-
-        .sort-options button:last-child {
-          border-radius: 0 0 8px 8px;
-        }
-
-        .properties-grid {
-          display: flex;
-          flex-direction: column;
-          gap: 2rem;
-        }
-
-        /* Property Card */
-        .property-card {
-          background: var(--white);
-          border: 1px solid var(--accent-subtle);
-          border-radius: 20px;
-          overflow: hidden;
-          display: grid;
-          grid-template-columns: 20rem 1fr auto;
-          transition: all 0.3s ease;
-          box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-          min-height: 20rem;
-          max-height: 25rem;
-          min-width: 60rem;
-        }
-
-        .property-card:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 10px 30px rgba(29, 163, 151, 0.1);
-          border-color: var(--primary);
-        }
-
-        .property-image {
-          position: relative;
-          height: 100%;
-          overflow: hidden;
-        }
-
-        .property-image img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: transform 0.3s ease;
-        }
-
-        .property-card:hover .property-image img {
-          transform: scale(1.05);
-        }
-
-        .property-actions {
-          position: absolute;
-          top: 1rem;
-          right: 1rem;
-          display: flex;
-          gap: 0.5rem;
-          opacity: 0;
-          transition: opacity 0.3s ease;
-        }
-
-        .property-card:hover .property-actions {
-          opacity: 1;
-        }
-
-        .action-btn {
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          border: none;
-          background: rgba(255, 255, 255, 0.9);
-          color: var(--dark-gray);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          transition: all 0.3s ease;
-        }
-
-        .action-btn:hover {
-          background: var(--primary);
-          color: white;
-        }
-
-        .property-type {
-          position: absolute;
-          bottom: 1rem;
-          left: 1rem;
-          background: var(--primary);
-          color: white;
-          padding: 0.5rem 1rem;
-          border-radius: 20px;
-          font-size: 0.85rem;
-          font-weight: 500;
-        }
-
-        .property-content {
-          padding: 2rem;
-          display: flex;
-          flex-direction: column;
-          justify-content: flex-start;
-          height: 100%;
-        }
-
-        .property-main-info {
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-        }
-
-        .property-bottom-info {
-          margin-top: auto;
-          flex-shrink: 0;
-        }
-
-        .property-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-start;
-          margin-bottom: 1rem;
-        }
-
-        .property-title {
-          color: var(--navy);
-          font-size: 1.3rem;
-          font-weight: 600;
-          line-height: 1.3;
-          margin-right: 1rem;
-        }
-
-        .property-price {
-          color: var(--primary);
-          font-size: 1.5rem;
-          font-weight: 700;
-          white-space: nowrap;
-        }
-
-        .property-location {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          color: #888888;
-          margin-bottom: 1rem;
-          font-weight: 500;
-        }
-
-        .property-description {
-          color: var(--dark-gray);
-          line-height: 1.6;
-          margin-bottom: 1.5rem;
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-        }
-
-        .property-details {
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: flex-start;
-          gap: 1.2rem;
-          padding: 2rem;
-          border-left: 1px solid var(--light-gray);
-          min-width: 10rem;
-        }
-
-        .detail-item {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          color: var(--dark-gray);
-          font-size: 0.9rem;
-          white-space: nowrap;
-        }
-
-        .detail-item svg {
-          color: var(--primary);
-        }
-
-        .property-footer {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding-top: 1rem;
-          border-top: 1px solid var(--light-gray);
-        }
-
-        .property-year {
-          color: #888888;
-          font-size: 0.9rem;
-          font-weight: 500;
-        }
-
-        .view-details-btn {
-          background: var(--primary);
-          color: white;
-          border: none;
-          padding: 0.75rem 1.5rem;
-          border-radius: 25px;
-          font-weight: 500;
-          cursor: pointer;
-          transition: all 0.3s ease;
-        }
-
-        .view-details-btn:hover {
-          background: #179088;
-          transform: translateY(-2px);
-        }
-        
-        /* Map Container */
-        .map-container {
-          position: relative;
-          border-radius: 20px;
-          overflow: hidden;
-          border: 1px solid var(--accent-subtle);
-          height: calc(100vh - 240px);
-          min-height: 40rem;
-          min-width: 40rem;
-          position: sticky;
-          top: 180px;
-        }
-        
-        .map {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-        
-        /* Map only view */
-        .main-content.map .map-container {
-          position: relative;
-          height: calc(100vh - 180px);
-          top: auto;
-          border-radius: 20px;
-          border: 1px solid var(--accent-subtle);
-        }
-
-        /* Responsive */
-        @media (max-width: 1200px) {
-          .main-content.split {
-            grid-template-columns: 280px 1fr;
-          }
-          
-          .main-content.list {
-            grid-template-columns: 250px 1fr;
-          }
-          
-          .map-container {
-            display: none;
-          }
-        }
-
-        @media (max-width: 968px) {
-          .main-content.list,
-          .main-content.split {
-            grid-template-columns: 1fr;
-          }
-
-          .filters-sidebar {
-            position: static;
-            margin-bottom: 2rem;
-          }
-
-          .property-card {
-            grid-template-columns: 1fr;
-            height: auto;
-          }
-
-          .property-image {
-            height: 200px;
-          }
-
-          .view-controls {
-            justify-content: center;
-          }
-          
-          .map-container {
-            display: none;
-          }
-        }
-
-        @media (max-width: 768px) {
-          .main-content {
-            padding: 1rem 5%;
-          }
-
-          .property-header {
-            flex-direction: column;
-            gap: 0.5rem;
-          }
-
-          .property-details {
-            flex-wrap: wrap;
-            gap: 1rem;
-          }
-
-          .property-footer {
-            flex-direction: column;
-            gap: 1rem;
-            align-items: flex-start;
-          }
-
-          .results-header {
-            flex-direction: column;
-            gap: 1rem;
-            align-items: flex-start;
-          }
-        }
-
-        
+/* Stiluri Globale pentru Pagină */
+.properties-page-container {
+  width: 100%;
+  padding-top: 80px; /* Spațiu pentru header-ul principal */
+  background-color: #f8f9fa;
+}
+
+.view-header {
+  background: white;
+  border-bottom: 1px solid #e9ecef;
+  padding: 0.5rem 0;
+  position: sticky;
+  top: 80px; /* Se lipește sub header */
+  z-index: 10;
+}
+
+.view-controls {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.view-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  border: 1px solid #dee2e6;
+  background: white;
+  color: #495057;
+  border-radius: 25px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.view-btn:hover {
+  border-color: #1DA397;
+  color: #1DA397;
+}
+
+.view-btn.active {
+  background: #1DA397;
+  border-color: #1DA397;
+  color: white;
+}
+
+
+/* Layout Principal (Sidebar, Listă, Hartă) */
+.main-content-area {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+  display: grid;
+  gap: 2rem;
+}
+
+/* Moduri de vizualizare */
+.main-content-area.list {
+  grid-template-columns: 280px 1fr; /* Sidebar + Lista */
+}
+.main-content-area.split {
+  grid-template-columns: 280px 1fr 400px; /* Sidebar + Lista + Harta */
+}
+.main-content-area.map {
+  grid-template-columns: 1fr; /* Doar Harta */
+  padding: 0;
+}
+
+/* Sidebar Filtre (Stiluri de bază) */
+.filters-sidebar {
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  padding: 1.5rem;
+  height: fit-content;
+  position: sticky;
+  top: 160px; /* Se lipește sub header și view-controls */
+}
+.filters-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #e9ecef;
+}
+.filters-header h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #343a40;
+}
+.filter-group {
+  margin-bottom: 1.2rem;
+}
+.filter-group label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: #495057;
+}
+.filter-group input,
+.filter-group select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+/* Container Lista Proprietăți */
+.properties-list-container {
+  min-width: 0;
+}
+
+.results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.results-header h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #343a40;
+}
+
+/* Dropdown Sortare (Stiluri de bază) */
+.sort-dropdown { position: relative; }
+.sort-button {
+    background-color: white;
+    border: 1px solid #ced4da;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.sort-options {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    margin-top: 0.5rem;
+    z-index: 20;
+}
+.sort-options button {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 0.75rem 1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+.sort-options button:hover { background-color: #f8f9fa; }
+
+
+/* Grid-ul care conține cardurile */
+.properties-grid-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+/* ============ STILURI NOI PENTRU PROPERTY CARD ============ */
+.property-card {
+  display: flex;
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+.property-card:hover {
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+  transform: translateY(-4px);
+}
+
+/* Container Imagine */
+.card-image-container {
+  position: relative;
+  flex: 0 0 280px; /* Lățime fixă, nu se extinde, nu se micșorează */
+}
+.card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.card-type-badge {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  background: rgba(0,0,0,0.5);
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+.card-actions {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.property-card:hover .card-actions {
+  opacity: 1;
+}
+.action-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.9);
+  color: #495057;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+.action-btn:hover {
+  background: #1DA397;
+  color: white;
+}
+
+
+/* Container Conținut (Text) */
+.card-content {
+  flex: 1; /* Ocupă restul spațiului disponibil */
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* CHEIA: Împarte conținutul sus și jos */
+}
+
+.card-top, .card-bottom {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #212529;
+  line-height: 1.3;
+}
+.card-price {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1DA397;
+  white-space: nowrap;
+}
+
+.card-location {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #6c757d;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+.card-description {
+  color: #495057;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  /* Limitează textul la 2 rânduri */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.card-features {
+  display: flex;
+  gap: 1.5rem;
+  padding-top: 1rem;
+  margin-bottom: 1rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #495057;
+  font-size: 0.9rem;
+}
+.feature-item svg {
+  color: #899096;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-year {
+  font-size: 0.85rem;
+  color: #6c757d;
+}
+
+.details-btn {
+  background: #1DA397;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 25px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.details-btn:hover {
+  background: #179088;
+}
+
+/* Hartă */
+.map-area {
+  position: sticky;
+  top: 160px;
+  height: calc(100vh - 200px);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.leaflet-map {
+  width: 100%;
+  height: 100%;
+}

@@ -12,7 +12,7 @@ export default function App() {
 
       <Routes>
         <Route path="/" element = {<Homepage />} />
-        <Route path="proprietati" element = {<Properties />} /> 
+        <Route path="properties" element = {<Properties />} /> 
         <Route path="details" element = {<Details />} />
       </Routes>
 

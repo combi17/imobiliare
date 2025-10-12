@@ -1,14 +1,67 @@
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Filter, MapPin, Home, Bath, Maximize, Heart, Eye, Map, List, ChevronDown } from 'lucide-react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './Properties.css';
-import iancului from '../assets/iancului.png';
-import eminescu from '../assets/eminescu.jpg';
-import rosseti from '../assets/rosseti.jpg';
+import supabase from "../supabaseClient"
+
+const PropertyCard = ({ property }) => {
+  return (
+    <div className="property-card">
+      <div className="card-image-container">
+        <img src={property.image_url} alt={property.name} className="card-image" />
+        <div className="card-type-badge">{property.type}</div>
+        <div className="card-actions">
+            <button className="action-btn"><Heart size={18} /></button>
+            <button className="action-btn"><Eye size={18} /></button>
+        </div>
+      </div>
+
+      <div className="card-content">
+        <div className="card-top">
+          <div className="card-header">
+            <h3 className="card-title">{property.name}</h3>
+            <p className="card-price">€{property.price.toLocaleString()}</p>
+          </div>
+          <div className="card-location">
+            <MapPin size={15} />
+            <span>{property.zone}</span>
+          </div>
+          <p className="card-description">{property.description}</p>
+        </div>
+        
+        <div className="card-bottom">
+           <div className="card-features">
+                <div className="feature-item">
+                    <Maximize size={16} />
+                    <span>{property.size} mp</span>
+                </div>
+                <div className="feature-item">
+                    <Home size={16} />
+                    <span>{property.rooms} camere</span>
+                </div>
+                <div className="feature-item">
+                    <Bath size={16} />
+                    <span>{property.baths} băi</span>
+                </div>
+            </div>
+            <div className="card-footer">
+                <span className="card-year">Construit în {property.year}</span>
+                <button className="details-btn">Vezi detalii</button>
+            </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const Properties = () => {
-  const [viewMode, setViewMode] = useState('split');
+  const [properties, setProperties] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [searchParams] = useSearchParams();
+
+  const [viewMode, setViewMode] = useState('list'); //list, split, map
   const [sortBy, setSortBy] = useState('');
   const [showSortDropdown, setShowSortDropdown] = useState(false);
   const [filters, setFilters] = useState({
@@ -22,106 +75,79 @@ const Properties = () => {
     bathrooms: ''
   });
 
-  const properties = [
-    {
-      id: 1,
-      title: "Spatii Birouri zona Magheru",
-      price: 15,
-      surface: 274,
-      rooms: 5,
-      bathrooms: 2,
-      zone: "Sector 1",
-      type: "Birou",
-      image: rosseti,
-      description: "Cladire simbol situata pe strada Maria Rosetti, in apropiere de Gradina Icoanei.",
-      year: 2008,
-      lat: 44.4411,
-      lng: 26.1025
-    },
-    {
-      id: 2,
-      title: "Imobil Birouri liber integral zona Iancului",
-      price: 5500,
-      surface: 640,
-      rooms: 7,
-      bathrooms: 3,
-      zone: "Iancului",
-      type: "Birou",
-      image: iancului,
-      description: "Imobil cu curte interioara si 2 balcoane.",
-      year: 2009,
-      lat: 44.4383,
-      lng: 26.1406
-    },
-    {
-      id: 3,
-      title: "Spatii Birouri premium în zona Eminescu",
-      price: 16,
-      surface: 1150,
-      rooms: 8,
-      bathrooms: 5,
-      zone: "Eminescu",
-      type: "Birou",
-      image: eminescu,
-      description: "Cladire de clasa A finalizata in 2019.",
-      year: 2019,
-      lat: 44.4448,
-      lng: 26.1127
-    },
-  ];
+  useEffect(() => {
+    const getProperties = async () => {
+      setIsLoading(true);
+
+      let query = supabase
+        .from('properties')
+        .select('*');
+      
+      const zone = searchParams.get('zone');
+      const type = searchParams.get('type');
+      const minPrice = searchParams.get('minPrice');
+      const maxPrice = searchParams.get('maxPrice');
+
+      if (zone)
+        query = query.ilike('zone', `&${zone}`)
+      if (type)
+        query = query.eq('type', type);
+      if (minPrice)
+        query = query.gte('price', minPrice);
+      if(maxPrice)
+        query = query.lte('price', maxPrice);
+
+      const { data, error } = await query;
+      
+      if (error) {
+        console.error("Eroare la preluarea datelor", error);
+      }
+      else {
+        setProperties(data);
+      }
+      setIsLoading(false);
+    };
+    getProperties();
+  }, [searchParams]);
+
 
   const handleFilterChange = (key, value) => {
     setFilters(prev => ({ ...prev, [key]: value }));
   };
 
-  // harta Leaflet
+  // harta leaflet
   useEffect(() => {
-    // Only initialize map if we need it
-    if (viewMode === 'list') return;
+    if (document.getElementById('map') && !document.getElementById('map')._leaflet_id) {
+      const map = L.map('map').setView([44.4268, 26.1025], 13);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+      }).addTo(map);
 
-    const map = L.map('map', {
-      center: [44.4268, 26.1025],
-      zoom: 13,
-      zoomControl: true
-    });
+      properties.forEach(property => {
+        L.marker([property.lat, property.lng]).addTo(map)
+          .bindPopup(`<b>${property.name}</b><br>€${property.price}`);
+      });
+      
+      return () => {
+        map.remove();
+      };
+    }
+  }, [viewMode, properties]); 
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors'
-    }).addTo(map);
-
-    properties.forEach(property => {
-      const marker = L.marker([property.lat, property.lng]).addTo(map);
-
-      const popupContent = `
-        <div style="min-width: 200px;">
-          <img src="${property.image}" style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px; margin-bottom: 8px;" />
-          <h4 style="margin: 0 0 8px 0; font-size: 14px; font-weight: 600;">${property.title}</h4>
-          <p style="margin: 0 0 8px 0; color: #1DA397; font-weight: 700; font-size: 16px;">€${property.price.toLocaleString()}</p>
-          <div style="display: flex; gap: 12px; font-size: 12px; color: #666;">
-            <span>${property.surface} mp</span>
-            <span>${property.rooms} camere</span>
-            <span>${property.bathrooms} băi</span>
-          </div>
-        </div>
-      `;
-      marker.bindPopup(popupContent);
-    });
-
-    return () => {
-      map.remove();
-    };
-  }, [properties, viewMode]);
+  if (isLoading) {
+    return <div>Please wait...</div>;
+  }
 
   return (
-    <div className="properties-page">
+    <div className="properties-page-container">
       <div className="view-header">
         <div className="view-controls">
-          <button 
+           <button 
             className={`view-btn ${viewMode === 'list' ? 'active' : ''}`}
             onClick={() => setViewMode('list')}
           >
             <List size={18} />
-            Lista
+            Listă
           </button>
           <button 
             className={`view-btn ${viewMode === 'split' ? 'active' : ''}`}
@@ -140,210 +166,55 @@ const Properties = () => {
         </div>
       </div>
 
-      <div className={`main-content ${viewMode}`}>
+      <div className={`main-content-area ${viewMode}`}>
         {viewMode !== 'map' && (
           <aside className="filters-sidebar">
-            <div className="filters-header">
+             <div className="filters-header">
               <Filter size={20} />
               <h3>Filtre</h3>
             </div>
-
-            <div className="filter-group">
+             <div className="filter-group">
               <label>Tip Proprietate</label>
-              <select
-                value={filters.propertyType}
-                onChange={(e) => handleFilterChange('propertyType', e.target.value)}
-              >
-                <option value="">Toate tipurile</option>
-                <option value="apartament">Apartament</option>
-                <option value="casa">Casă</option>
-                <option value="vila">Vilă</option>
-                <option value="penthouse">Penthouse</option>
+              <select value={filters.propertyType} onChange={(e) => handleFilterChange('propertyType', e.target.value)}>
+                <option value="">Toate</option>
+                <option value="Birou">Birou</option>
               </select>
             </div>
-
-            <div className="filter-group">
+             <div className="filter-group">
               <label>Zonă</label>
-              <select
-                value={filters.zone}
-                onChange={(e) => handleFilterChange('zone', e.target.value)}
-              >
-                <option value="">Toate zonele</option>
-                <option value="sector1">Sector 1</option>
-                <option value="sector2">Sector 2</option>
-                <option value="pipera">Pipera</option>
-                <option value="herastrau">Herastrau</option>
-                <option value="amzei">Amzei</option>
-              </select>
+              <input type="text" placeholder="ex: Sector 1" value={filters.zone} onChange={(e) => handleFilterChange('zone', e.target.value)} />
             </div>
-
-            <div className="filter-group">
-              <label>Preț (€/mp)</label>
-              <div className="range-inputs">
-                <input
-                  type="number"
-                  placeholder="Min"
-                  value={filters.minPrice}
-                  onChange={(e) => handleFilterChange('minPrice', e.target.value)}
-                />
-                <input
-                  type="number"
-                  placeholder="Max"
-                  value={filters.maxPrice}
-                  onChange={(e) => handleFilterChange('maxPrice', e.target.value)}
-                />
-              </div>
-            </div>
-
-            <div className="filter-group">
-              <label>Suprafață (mp)</label>
-              <div className="range-inputs">
-                <input
-                  type="number"
-                  placeholder="Min"
-                  value={filters.minSurface}
-                  onChange={(e) => handleFilterChange('minSurface', e.target.value)}
-                />
-                <input
-                  type="number"
-                  placeholder="Max"
-                  value={filters.maxSurface}
-                  onChange={(e) => handleFilterChange('maxSurface', e.target.value)}
-                />
-              </div>
-            </div>
-
-            <div className="filter-group">
-              <label>Numărul de camere</label>
-              <select
-                value={filters.rooms}
-                onChange={(e) => handleFilterChange('rooms', e.target.value)}
-              >
-                <option value="">Orice număr</option>
-                <option value="1">1 cameră</option>
-                <option value="2">2 camere</option>
-                <option value="3">3 camere</option>
-                <option value="4">4+ camere</option>
-              </select>
-            </div>
-
-            <div className="filter-group">
-              <label>Băi</label>
-              <select
-                value={filters.bathrooms}
-                onChange={(e) => handleFilterChange('bathrooms', e.target.value)}
-              >
-                <option value="">Orice număr</option>
-                <option value="1">1 baie</option>
-                <option value="2">2 băi</option>
-                <option value="3">3+ băi</option>
-              </select>
-            </div>
-
-            <button className="clear-filters">Șterge filtrele</button>
           </aside>
         )}
 
         {viewMode !== 'map' && (
-          <main className="properties-list">
+          <main className="properties-list-container">
             <div className="results-header">
               <h2>{properties.length} proprietăți găsite</h2>
               <div className="sort-dropdown">
-                <button 
-                  className="sort-button"
-                  onClick={() => setShowSortDropdown(!showSortDropdown)}
-                >
-                  Sortează după
-                  <ChevronDown size={16} />
+                 <button className="sort-button" onClick={() => setShowSortDropdown(!showSortDropdown)}>
+                  Sortează <ChevronDown size={16} />
                 </button>
                 {showSortDropdown && (
                   <div className="sort-options">
-                    <button onClick={() => {setSortBy('price-asc'); setShowSortDropdown(false);}}>
-                      Preț crescător
-                    </button>
-                    <button onClick={() => {setSortBy('price-desc'); setShowSortDropdown(false);}}>
-                      Preț descrescător
-                    </button>
-                    <button onClick={() => {setSortBy('surface-asc'); setShowSortDropdown(false);}}>
-                      Suprafață crescătoare
-                    </button>
-                    <button onClick={() => {setSortBy('surface-desc'); setShowSortDropdown(false);}}>
-                      Suprafață descrescătoare
-                    </button>
-                    <button onClick={() => {setSortBy('newest'); setShowSortDropdown(false);}}>
-                      Cele mai noi
-                    </button>
+                     <button onClick={() => {setSortBy('price-asc'); setShowSortDropdown(false);}}>Preț crescător</button>
+                     <button onClick={() => {setSortBy('price-desc'); setShowSortDropdown(false);}}>Preț descrescător</button>
                   </div>
                 )}
               </div>
             </div>
 
-            <div className="properties-grid">
+            <div className="properties-grid-layout">
               {properties.map(property => (
-                <div key={property.id} className="property-card">
-                  <div className="property-image">
-                    <img src={property.image} alt={property.title} />
-                    <div className="property-actions">
-                      <button className="action-btn favorite">
-                        <Heart size={18} />
-                      </button>
-                      <button className="action-btn view">
-                        <Eye size={18} />
-                      </button>
-                    </div>
-                    <div className="property-type">{property.type}</div>
-                  </div>
-
-                  <div className="property-content">
-                    <div className="property-main-info">
-                      <div className="property-header">
-                        <h3 className="property-title">{property.title}</h3>
-                        <div className="property-price">€{property.price}</div>
-                      </div>
-
-                      <div className="property-location">
-                        <MapPin size={14} />
-                        <span>{property.zone}</span>
-                      </div>
-
-                      <p className="property-description">{property.description}</p>
-
-                      <div className="property-details">
-                        <div className="detail-item">
-                          <Maximize size={14} />
-                          <span>{property.surface} mp</span>
-                        </div>
-                        <div className="detail-item">
-                          <Home size={14} />
-                          <span>{property.rooms} camere</span>
-                        </div>
-                        <div className="detail-item">
-                          <Bath size={14} />
-                          <span>{property.bathrooms} băi</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="property-footer">
-                      <span className="property-year">Construit în {property.year}</span>
-                      <button className="view-details-btn">Vezi detalii</button>
-                    </div>
-                  </div>
-                </div>
+                <PropertyCard key={property.id} property={property} />
               ))}
             </div>
           </main>
         )}
 
-        {viewMode === 'split' && (
-          <div className="map-container">
-            <div id="map" className="map"></div>
-          </div>
-        )}
-
-        {viewMode === 'map' && (
-          <div className="map-container">
-            <div id="map" className="map"></div>
+        {viewMode !== 'list' && (
+          <div className="map-area">
+            <div id="map" className="leaflet-map"></div>
           </div>
         )}
       </div>

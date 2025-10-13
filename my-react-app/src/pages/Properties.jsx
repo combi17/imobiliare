@@ -89,7 +89,7 @@ const Properties = () => {
       const maxPrice = searchParams.get('maxPrice');
 
       if (zone)
-        query = query.ilike('zone', `&${zone}`)
+        query = query.eq('zone', zone);
       if (type)
         query = query.eq('type', type);
       if (minPrice)
@@ -98,7 +98,7 @@ const Properties = () => {
         query = query.lte('price', maxPrice);
 
       const { data, error } = await query;
-      
+
       if (error) {
         console.error("Eroare la preluarea datelor", error);
       }

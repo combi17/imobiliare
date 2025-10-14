@@ -59,9 +59,9 @@ const SearchCard = () => {
                     onChange={(e) => setLocation(e.target.value)}
                   >
                     <option value="" disabled hidden>Sector / Zona</option>
-                    <option value="Sector1">Sector 1</option>
-                    <option value="Sector2">Sector 2</option>
-                    <option value="Sector3">Sector 3</option>
+                    <option value="Sector 1">Sector 1</option>
+                    <option value="Sector 2">Sector 2</option>
+                    <option value="Sector 3">Sector 3</option>
                   </select>
                 </div>
               </div>

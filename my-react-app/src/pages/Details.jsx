@@ -1,86 +1,65 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, MapPin, Home, Bed, Bath, Square, Calendar, Heart, Share2, Phone, Mail } from 'lucide-react';
 import './Details.css'
+import supabase from '../supabaseClient';
+import { useParams, useNavigate } from 'react-router-dom';
 
 const Details = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isFavorited, setIsFavorited] = useState(false);
   const [map, setMap] = useState(null);
+  const [property, setProperty] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Date mock pentru proprietate
-  const property = {
-    id: 1,
-    title: "Spații Birouri zona Magheru",
-    address: "Strada Maria Rosetti, Sector 1, București",
-    price: "€1,500",
-    priceDetails: "€15/mp",
-    type: "Birou",
-    area: "274 mp",
-    rooms: "5 camere",
-    bathrooms: "2 băi",
-    yearBuilt: "2008",
-    coordinates: [44.4268, 26.1025], // București coordonate
-    description: "Clădire simbol, care nu poate trece neremarcată, imobilul este situat pe strada Maria Rosetti, în apropiere de Grădina Icoanei și Magheru. Spațiul oferă o vedere panoramică asupra orașului și beneficiază de o locație excelentă pentru afaceri. Interiorul este modern amenajat, cu finisaje de calitate superioară și dotări complete pentru birouri.",
-    features: [
-      "Aer condiționat",
-      "Internet fibră optică",
-      "Sistem securitate",
-      "Parcare inclusă",
-      "Mobilat complet",
-      "Vedere panoramică"
-    ],
-    images: [
-      "https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=800&h=600&fit=crop"
-    ],
-    agent: {
-      name: "Ana Popescu",
-      phone: "+40 722 123 456",
-      email: "ana.popescu@realestate.ro"
-    }
-  };
+  const { id } = useParams();
+  const navigate = useNavigate();
 
-  // Inițializare hartă Leaflet
   useEffect(() => {
-    // Încarcă Leaflet doar dacă nu e deja încărcat
-    if (typeof window !== 'undefined' && !window.L) {
-      const leafletScript = document.createElement('script');
-      leafletScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js';
-      leafletScript.onload = initializeMap;
-      document.head.appendChild(leafletScript);
+    const fetchProperty = async () => {
+      if (!id)
+        return;
 
-      const leafletCSS = document.createElement('link');
-      leafletCSS.rel = 'stylesheet';
-      leafletCSS.href = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css';
-      document.head.appendChild(leafletCSS);
-    } else if (window.L) {
-      initializeMap();
-    }
+      setLoading(true);
 
-    return () => {
-      if (map) {
-        map.remove();
+      const { data, error } = await supabase
+        .from('properties')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (error) {
+        console.error('Eroare la preluarea datelor: ', error)
+        setProperty(null);
       }
+      else {
+        setProperty(data);
+      }
+
+      setLoading(false);
     };
-  }, []);
 
-  const initializeMap = () => {
-    setTimeout(() => {
-      if (window.L && document.getElementById('property-map')) {
-        const newMap = window.L.map('property-map').setView(property.coordinates, 15);
+    fetchProperty();
+  }, [id]);
+  
+  useEffect(() => {
+    if (property && property.lat && property.lng && document.getElementById('property-map')) {
+      import('leaflet').then(L => {
+        import('leaflet/dist/leaflet.css');
         
-        window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {}).addTo(newMap);
+        const map = L.map('property-map').setView([property.lat, property.lng], 15);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {}).addTo(map);
 
-        window.L.marker(property.coordinates)
-          .addTo(newMap)
+        L.marker([property.lat, property.lng])
+          .addTo(map)
           .bindPopup(property.title);
 
-        setMap(newMap);
-      }
-    }, 100);
-  };
+        return () => {
+          map.remove();
+        };
+      });
+    }
+  }, [property]);
 
   const nextImage = () => {
     setCurrentImageIndex((prev) => (prev + 1) % property.images.length);
@@ -90,12 +69,19 @@ const Details = () => {
     setCurrentImageIndex((prev) => (prev - 1 + property.images.length) % property.images.length);
   };
 
+  if (loading) {
+    return <div className='loading-message'>Se incarca detaliile proprietatii alese...</div>;
+  }
+
+  if (!property) {
+    return <div className='error-message'>Proprietatea nu a fost gasita.</div>;
+  }
+
   return (
     <div className="property-details-page">
-      {/* Header cu navigare proprietate */}
       <div className="page-header">
         <div className="container">
-          <button className="back-btn">
+          <button className="back-btn" onClick={() => navigate(-1)}>
             <ArrowLeft size={20} />
             Înapoi la rezultate
           </button>
@@ -114,23 +100,21 @@ const Details = () => {
       </div>
 
       <div className="container">
-        {/* Header cu titlu și preț */}
         <div className="property-header">
           <div className="title-section">
             <span className="property-type">{property.type}</span>
             <h1 className="property-title">{property.title}</h1>
             <div className="property-address">
               <MapPin size={16} />
-              {property.address}
+              {property.zone}
             </div>
           </div>
           <div className="price-section">
-            <div className="main-price">{property.price}</div>
+            <div className="main-price">€{property.price.toLocaleString()}</div>
             <div className="price-details">{property.priceDetails}</div>
           </div>
         </div>
 
-        {/* Galeria de imagini */}
         <div className="image-gallery">
           <div className="main-image">
             <img src={property.images[currentImageIndex]} alt={property.title} />
@@ -154,35 +138,31 @@ const Details = () => {
         </div>
 
         <div className="property-content">
-          {/* Informații principale */}
           <div className="property-info">
-            {/* Detalii proprietate */}
             <div className="property-details">
               <div className="detail-item">
                 <Square className="detail-icon" />
-                <span>{property.area}</span>
+                <span>{property.size} mp</span>
               </div>
               <div className="detail-item">
                 <Home className="detail-icon" />
-                <span>{property.rooms}</span>
+                <span>{property.rooms} camere</span>
               </div>
               <div className="detail-item">
                 <Bath className="detail-icon" />
-                <span>{property.bathrooms}</span>
+                <span>{property.bathrooms} bai</span>
               </div>
               <div className="detail-item">
                 <Calendar className="detail-icon" />
-                <span>Construit în {property.yearBuilt}</span>
+                <span>Construit în {property.year}</span>
               </div>
             </div>
 
-            {/* Descriere */}
             <div className="description-section">
               <h2>Descriere</h2>
               <p>{property.description}</p>
             </div>
 
-            {/* Caracteristici */}
             <div className="features-section">
               <h2>Caracteristici</h2>
               <div className="features-grid">
@@ -195,7 +175,6 @@ const Details = () => {
             </div>
           </div>
 
-          {/* Sidebar cu contact */}
           <div className="property-sidebar">
             <div className="contact-section">
               <h2>Contact Agent</h2>
@@ -224,7 +203,6 @@ const Details = () => {
           </div>
         </div>
 
-        {/* Harta */}
         <div className="map-section">
           <h2>Localizare</h2>
           <div id="property-map" className="leaflet-map"></div>

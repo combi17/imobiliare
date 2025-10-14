@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import { Filter, MapPin, Home, Bath, Maximize, Heart, Eye, Map, List, ChevronDown } from 'lucide-react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -8,6 +8,7 @@ import supabase from "../supabaseClient"
 
 const PropertyCard = ({ property }) => {
   return (
+    <Link to={`/properties/${property.id}`} className="property-card-link">
     <div className="property-card">
       <div className="card-image-container">
         <img src={property.image_url} alt={property.name} className="card-image" />
@@ -53,6 +54,7 @@ const PropertyCard = ({ property }) => {
         </div>
       </div>
     </div>
+    </Link>
   );
 };
 

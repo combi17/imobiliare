@@ -11,7 +11,7 @@ const PropertyCard = ({ property }) => {
     <Link to={`/properties/${property.id}`} className="property-card-link">
     <div className="property-card">
       <div className="card-image-container">
-        <img src={property.image_url} alt={property.name} className="card-image" />
+        <img src={property.image_urls[0]} alt={property.name} className="card-image" />
         <div className="card-type-badge">{property.type}</div>
         <div className="card-actions">
             <button className="action-btn"><Heart size={18} /></button>

@@ -3,6 +3,7 @@ import { ArrowLeft, MapPin, Home, Bed, Bath, Square, Calendar, Heart, Share2, Ph
 import './Details.css'
 import supabase from '../supabaseClient';
 import { useParams, useNavigate } from 'react-router-dom';
+import lenus from "../assets/lenus.jpg";
 
 const Details = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -62,11 +63,14 @@ const Details = () => {
   }, [property]);
 
   const nextImage = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % property.images.length);
+    if (property && property.image_urls && property.image_urls.length > 0) {
+      setCurrentImageIndex((prev) => (prev + 1) % property.image_urls.length);      
+    } 
   };
 
   const prevImage = () => {
-    setCurrentImageIndex((prev) => (prev - 1 + property.images.length) % property.images.length);
+    if (property && property.image_urls && property.image_urls.length > 0)
+    setCurrentImageIndex((prev) => (prev - 1 + property.image_urls.length) % property.image_urls.length);
   };
 
   if (loading) {
@@ -110,32 +114,44 @@ const Details = () => {
             </div>
           </div>
           <div className="price-section">
-            <div className="main-price">€{property.price.toLocaleString()}</div>
-            <div className="price-details">{property.priceDetails}</div>
+            <div className="main-price">€{property.price.toLocaleString()}/luna</div>
+            <div className="price-details">€{property.priceDetails}/mp</div>
           </div>
         </div>
 
-        <div className="image-gallery">
-          <div className="main-image">
-            <img src={property.images[currentImageIndex]} alt={property.title} />
-            <button className="nav-btn prev" onClick={prevImage}>❮</button>
-            <button className="nav-btn next" onClick={nextImage}>❯</button>
-            <div className="image-counter">
-              {currentImageIndex + 1} / {property.images.length}
+        {property.image_urls && property.image_urls.length > 0 ? (
+          <div className="image-gallery">
+            <div className="main-image">
+              <img src={property.image_urls[currentImageIndex]} alt={`${property.title} ${currentImageIndex + 1}`} />
+              
+              {property.image_urls.length > 1 && (
+                <>
+                  <button className="nav-btn prev" onClick={prevImage}>❮</button>
+                  <button className="nav-btn next" onClick={nextImage}>❯</button>
+                  <div className="image-counter">
+                    {currentImageIndex + 1} / {property.image_urls.length}
+                  </div>
+                </>
+              )}
             </div>
+            
+            {property.image_urls.length > 1 && (
+              <div className="thumbnail-grid">
+                {property.image_urls.map((image, index) => (
+                  <img
+                    key={index}
+                    src={image}
+                    alt={`${property.title} thumbnail ${index + 1}`}
+                    className={`thumbnail ${index === currentImageIndex ? 'active' : ''}`}
+                    onClick={() => setCurrentImageIndex(index)}
+                  />
+                ))}
+              </div>
+            )}
           </div>
-          <div className="thumbnail-grid">
-            {property.images.map((image, index) => (
-              <img
-                key={index}
-                src={image}
-                alt={`${property.title} ${index + 1}`}
-                className={`thumbnail ${index === currentImageIndex ? 'active' : ''}`}
-                onClick={() => setCurrentImageIndex(index)}
-              />
-            ))}
-          </div>
-        </div>
+        ) : (
+          <div className="no-images-placeholder">Nu sunt disponibile imagini pentru această proprietate.</div>
+        )}
 
         <div className="property-content">
           <div className="property-info">
@@ -181,11 +197,11 @@ const Details = () => {
               <div className="agent-card">
                 <div className="agent-info">
                   <div className="agent-avatar">
-                    <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=80&h=80&fit=crop&crop=face" alt={property.agent.name} />
+                    <img src={lenus} alt="Elena Miu" />
                   </div>
                   <div className="agent-details">
-                    <h3>{property.agent.name}</h3>
-                    <p>Agent imobiliar</p>
+                    <h3>Elena Miu</h3>
+                    <p>10+ Ani Experienta</p>
                   </div>
                 </div>
                 <div className="contact-buttons">

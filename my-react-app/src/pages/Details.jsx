@@ -7,8 +7,7 @@ import lenus from "../assets/lenus.jpg";
 
 const Details = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isFavorited, setIsFavorited] = useState(false);
-  const [map, setMap] = useState(null);
+  //const [map, setMap] = useState(null);
   const [property, setProperty] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -83,39 +82,26 @@ const Details = () => {
 
   return (
     <div className="property-details-page">
-      <div className="page-header">
-        <div className="container">
+      <div className="container">
+        <div className="property-header">          
           <button className="back-btn" onClick={() => navigate(-1)}>
             <ArrowLeft size={20} />
-            Înapoi la rezultate
+            Înapoi
           </button>
-          <div className="header-actions">
-            <button className="action-btn">
-              <Share2 size={20} />
-            </button>
-            <button 
-              className={`action-btn ${isFavorited ? 'favorited' : ''}`}
-              onClick={() => setIsFavorited(!isFavorited)}
-            >
-              <Heart size={20} fill={isFavorited ? '#1da397' : 'none'} />
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div className="container">
-        <div className="property-header">
-          <div className="title-section">            
+          <div className="title-section">   
+            <div className="title-top-row">
+              <span className="property-type">{property.type}</span>
+              <div className="property-address">
+                <MapPin size={16} />
+                  {property.address}
+              </div>  
+            </div>         
             <h1 className="property-title">{property.name}</h1>
-            <span className="property-type">{property.type}</span>
-            <div className="property-address">
-              <MapPin size={16} />
-              {property.zone}
-            </div>
+
           </div>
           <div className="price-section">
-            <div className="main-price">€{property.price.toLocaleString()}/luna</div>
             <div className="price-details">€{property.priceDetails}/mp</div>
+            <div className="main-price">€{property.price.toLocaleString()}/luna</div>          
           </div>
         </div>
 

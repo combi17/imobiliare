@@ -29,7 +29,7 @@ const PropertyCard = ({ property }) => {
             <MapPin size={15} />
             <span>{property.zone}</span>
           </div>
-          <p className="card-description">{property.description}</p>
+          <p className="card-description">{property.preview_description}</p>
         </div>
         
         <div className="card-bottom">

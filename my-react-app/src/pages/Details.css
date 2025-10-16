@@ -470,4 +470,20 @@
           }
         }
 
+        .title-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* Adaugă spațiu între elemente */
+  flex-wrap: wrap; /* Permite elementelor să treacă pe rândul următor pe ecrane mici */
+}
+
+.title-section .property-type {
+  margin-bottom: 0; /* Anulează orice margine de jos existentă */
+}
+
+.property-title {
+  /* Asigură-te că titlul ocupă toată lățimea disponibilă sub cele două elemente */
+  width: 100%;
+}
+
         

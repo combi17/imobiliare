@@ -105,9 +105,9 @@ const Details = () => {
 
       <div className="container">
         <div className="property-header">
-          <div className="title-section">
+          <div className="title-section">            
+            <h1 className="property-title">{property.name}</h1>
             <span className="property-type">{property.type}</span>
-            <h1 className="property-title">{property.title}</h1>
             <div className="property-address">
               <MapPin size={16} />
               {property.zone}

@@ -15,8 +15,9 @@
 
 .property-details-page {
   min-height: 100vh;
-  background: var(--light-gray);
+  background: var(--white);
   padding-top: 80px; /* Doar spațiul pentru header-ul principal */
+  padding-bottom: 4rem;
 }
 
 .container {
@@ -25,59 +26,51 @@
   padding: 0 2rem;
 }
 
-/* MODIFICARE 1: Am eliminat complet bara de sus (.page-header) */
-.page-header, .header-actions, .action-btn {
-  display: none;
+/* ================================================= */
+/* === NOUL HEADER (Titlu & Preț) === */
+/* ================================================= */
+
+.details-header {
+  padding: 2.5rem 0 1.5rem 0; /* Mai puțin spațiu jos (Change 2) */
 }
 
-
-/* MODIFICARE 2: Noul layout pentru header-ul paginii */
-.property-header {
+.details-header-main {
   display: flex;
-  align-items: flex-end; /* CHEIA: Aliniază la bază butonul, titlul și prețul mare */
-  gap: 1.5rem;
-  padding: 2.5rem 0;
-  margin-bottom: 2.5rem;
-  border-bottom: 1px solid var(--accent-subtle);
+  justify-content: space-between;
+  align-items: flex-end; /* Aliniază titlul și prețul mare la bază */
+  gap: 2rem;
 }
 
-/* MODIFICARE 3: Butonul de "înapoi" stilizat modern */
-.back-btn {
+.property-title {
+  color: var(--navy);
+  font-size: 2.25rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0;
+  text-indent: 0; /* Asigură vizibilitatea */
+}
+
+.main-price {
+  color: var(--primary);
+  font-size: 2.25rem;
+  font-weight: 700;
+  line-height: 1; /* Pentru aliniere perfectă */
+  flex-shrink: 0;
+  margin-left: auto;
+  text-align: right;
+}
+
+.details-header-secondary {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 0.5rem;
-  background-color: var(--white);
-  border: 1px solid var(--accent-subtle);
-  color: var(--dark-gray);
-  border-radius: 25px; /* Colțuri rotunjite, ca în poză */
-  padding: 0.75rem 1.25rem; /* Spațiu interior */
-  font-weight: 500;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  flex-shrink: 0; /* Previne micșorarea butonului */
-  margin-bottom: 4px; /* Ajustare fină pe verticală */
+  margin-top: 0.75rem;
 }
 
-.back-btn:hover {
-  background-color: var(--primary);
-  border-color: var(--primary);
-  color: var(--white);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(29, 163, 151, 0.25);
-}
-
-/* Containerul pentru titlu, care va crește */
-.title-section {
-  flex-grow: 1;
-}
-
-/* MODIFICARE 4: Aliniere pe un rând pentru tip și zonă */
-.title-top-row {
+.details-header-secondary-left {
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  margin-bottom: 0.75rem;
 }
 
 .property-type {
@@ -88,7 +81,7 @@
   font-size: 0.8rem;
   font-weight: 600;
   display: inline-block;
-  margin-bottom: 0; /* Anulăm marginea de jos */
+  margin: 0;
 }
 
 .property-address {
@@ -99,119 +92,182 @@
   font-weight: 500;
 }
 
-/* MODIFICARE 5: Asigurăm vizibilitatea titlului */
-.property-title {
-  color: var(--navy);
-  font-size: 2.25rem;
-  font-weight: 700;
-  line-height: 1.2;
-  margin: 0;
-  text-indent: 0; /* Resetează orice indentare ascunsă */
-}
-
-/* MODIFICARE 6: Prețul este împins la dreapta */
-.price-section {
-  text-align: right;
-  flex-shrink: 0;
-  margin-left: auto;
-}
-
-.main-price {
-  color: var(--primary);
-  font-size: 2.25rem; /* Aceeași dimensiune ca titlul pentru aliniere */
-  font-weight: 700;
-  line-height: 1; /* Aliniere perfectă la bază */
-}
-
 .price-details {
-  color: #888888;
+  color: var(--dark-gray);
   font-size: 1rem;
-  margin-bottom: 0.5rem;
+  font-weight: 500;
+  text-align: right;
 }
 
-/* Galeria de imagini */
-.image-gallery {
-  background: var(--white);
-  border-radius: 20px;
+/* Tascundem bara de subtitlu pe desktop (Change 1) */
+.details-subtitle-bar {
+  display: none;
+}
+
+
+/* ================================================= */
+/* === NOUA GALERIE DE IMAGINI (Stil Booking) === */
+/* ================================================= */
+
+.image-grid-container {
+  display: grid;
+  grid-template-columns: 2fr 1fr; /* Coloana principală 2/3, secundară 1/3 */
+  grid-template-rows: 250px 250px; /* Două rânduri de 250px */
+  gap: 8px;
+  border-radius: 16px;
   overflow: hidden;
-  border: 1px solid var(--accent-subtle);
-  margin-bottom: 2.5rem;
+  cursor: pointer;
 }
 
-.main-image {
+.grid-image-main {
+  grid-column: 1 / 2;
+  grid-row: 1 / 3; /* Imaginea principală ocupă ambele rânduri */
+  overflow: hidden;
+}
+
+.grid-image-secondary {
+  grid-column: 2 / 3;
+  grid-row: 1 / 3; /* Containerul secundar ocupă ambele rânduri */
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Două coloane în spațiul secundar */
+  grid-template-rows: 1fr 1fr; /* Două rânduri în spațiul secundar */
+  gap: 8px;
+}
+
+.grid-image-item {
   position: relative;
-  height: 500px;
   overflow: hidden;
 }
 
-.main-image img {
+.grid-image-main img,
+.grid-image-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease, filter 0.3s ease;
 }
 
-.nav-btn {
+.grid-image-main:hover img,
+.grid-image-item:hover img {
+  transform: scale(1.05);
+  filter: brightness(0.85);
+}
+
+.view-all-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.5rem;
+  pointer-events: none;
+}
+
+.no-images-placeholder {
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--light-gray);
+  color: var(--dark-gray);
+  font-weight: 500;
+  border-radius: 16px;
+  margin-bottom: 2.5rem;
+}
+
+.lightbox-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox-close-btn {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  background: rgba(0, 0, 0, 0.3);
+  border: none;
+  color: white;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1010;
+  transition: background 0.2s ease;
+}
+
+.lightbox-close-btn:hover {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.lightbox-arrow {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(30, 30, 30, 0.5);
+  background: rgba(0, 0, 0, 0.3);
   border: none;
-  width: 44px;
-  height: 44px;
+  color: white;
   border-radius: 50%;
+  width: 56px;
+  height: 56px;
   cursor: pointer;
-  font-size: 18px;
-  font-weight: bold;
-  color: white;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1010;
+  transition: background 0.2s ease;
 }
-
-.nav-btn:hover {
-  background: var(--primary);
-}
-
-.nav-btn.prev { left: 1rem; }
-.nav-btn.next { right: 1rem; }
-
-.image-counter {
-  position: absolute;
-  bottom: 1rem;
-  right: 1rem;
+.lightbox-arrow:hover {
   background: rgba(0, 0, 0, 0.6);
+}
+.lightbox-arrow.prev { left: 2rem; }
+.lightbox-arrow.next { right: 2rem; }
+
+.lightbox-content {
+  position: relative;
+}
+
+.lightbox-image {
+  max-width: 90vw;
+  max-height: 85vh;
+  object-fit: contain;
+  user-select: none;
+}
+
+.lightbox-counter {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.5);
   color: white;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 1.25rem;
   border-radius: 20px;
-  font-size: 0.9rem;
+  font-size: 1rem;
+  user-select: none;
 }
 
-.thumbnail-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 0.5rem;
-  padding: 1rem;
-  background-color: #fdfdfd;
-}
 
-.thumbnail {
-  height: 80px;
-  border-radius: 8px;
-  cursor: pointer;
-  object-fit: cover;
-  border: 2px solid transparent;
-  transition: all 0.3s ease;
-  opacity: 0.7;
-}
-
-.thumbnail:hover { opacity: 1; }
-
-.thumbnail.active {
-  border-color: var(--primary);
-  opacity: 1;
-  box-shadow: 0 0 0 2px var(--primary);
-}
-
-/* Conținut proprietate */
 .property-content {
   display: grid;
   grid-template-columns: minmax(0, 2fr) 1fr;
@@ -219,20 +275,24 @@
   padding: 2rem 0;
 }
 
-.property-info {
+.property-info, .contact-section {
   background: var(--white);
   border-radius: 20px;
   padding: 2.5rem;
   border: 1px solid var(--accent-subtle);
+  height: fit-content;
+}
+
+.property-details-page .property-info {
+  background: var(--white);
 }
 
 .property-details {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem;
-  margin-bottom: 2.5rem;
-  padding-bottom: 2.5rem;
-  border-bottom: 1px solid var(--accent-subtle);
+  grid-template-columns: repeat(auto-fit, minmax(200px, 3fr));
+  margin-bottom: 1rem;
+  padding-bottom: 2rem;
+
 }
 
 .detail-item {
@@ -247,6 +307,15 @@
   color: var(--primary);
   width: 22px;
   height: 22px;
+}
+
+.description-section,
+.features-section {
+  margin-bottom: 2.5rem;
+}
+.description-section:last-child,
+.features-section:last-child {
+  margin-bottom: 0;
 }
 
 .description-section h2,
@@ -268,7 +337,7 @@
 
 .features-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1rem;
 }
 
@@ -280,15 +349,8 @@
 /* Sidebar */
 .property-sidebar {
   position: sticky;
-  top: 100px;
+  top: 100px; /* 80px (header) + 20px (spațiu) */
   height: fit-content;
-}
-
-.contact-section {
-  background: var(--white);
-  border-radius: 20px;
-  padding: 2rem;
-  border: 1px solid var(--accent-subtle);
 }
 
 .agent-card {
@@ -339,25 +401,21 @@
   transition: all 0.3s ease;
   border: 2px solid;
 }
-
 .contact-btn.primary {
   background: var(--primary);
   color: white;
   border-color: var(--primary);
 }
-
 .contact-btn.primary:hover {
   background: #179088;
   border-color: #179088;
   transform: translateY(-2px);
 }
-
 .contact-btn.secondary {
   background: transparent;
   color: var(--primary);
   border-color: var(--primary);
 }
-
 .contact-btn.secondary:hover {
   background: var(--primary);
   color: white;
@@ -375,7 +433,10 @@
   border: 1px solid var(--accent-subtle);
 }
 
-/* Responsive */
+/* ================================================= */
+/* === RESPONSIVE DESIGN === */
+/* ================================================= */
+
 @media (max-width: 1024px) {
   .property-content {
     grid-template-columns: 1fr;
@@ -387,25 +448,84 @@
     padding: 0 1rem;
   }
 
-  .property-header {
+  /* Pe mobil, schimbăm fundalul paginii */
+  .property-details-page {
+    background: var(--light-gray);
+  }
+  /* Și forțăm cardul de info să fie alb */
+  .property-details-page .property-info {
+    background: var(--white);
+  }
+  
+  .details-header {
     flex-wrap: wrap;
     align-items: flex-start;
+    padding: 1.5rem 0;
+    margin-bottom: 1.5rem;
   }
 
-  .title-section {
-    order: 2;
-    width: 100%;
-  }
-
-  .back-btn {
-    order: 1;
-  }
-
-  .price-section {
-    order: 3;
+  .details-header-main,
+  .details-header-secondary {
+    flex-basis: 100%;
     width: 100%;
     text-align: left;
-    margin-left: 0;
+  }
+
+  .details-header-secondary {
+    justify-content: space-between;
+  }
+
+  .main-price, .price-details {
+    text-align: left;
+  }
+
+  .property-title, .main-price {
+    font-size: 1.8rem;
+  }
+
+  /* Trecem galeria pe o singură coloană */
+  .image-grid-container {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    max-height: none;
+  }
+
+  .grid-image-main {
+    grid-row: auto;
+    height: 300px;
+  }
+  
+  .grid-image-secondary {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 120px 120px;
+  }
+
+  /* Afișăm subtitlul sub galerie (Change 1) */
+  .details-header-secondary { display: none; } /* Ascundem originalul */
+  
+  .details-subtitle-bar {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .property-type-mobile {
+    display: inline-block;
+    background: rgba(29, 163, 151, 0.1);
+    color: var(--primary);
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+  .property-address-mobile {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--dark-gray);
+    font-weight: 500;
   }
 
   .property-details, .features-grid {

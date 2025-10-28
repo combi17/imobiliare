@@ -1,40 +1,34 @@
-import React, { useState, useEffect } from 'react';
-import { ArrowLeft, MapPin, Home, Bed, Bath, Square, Calendar, Heart, Share2, Phone, Mail } from 'lucide-react';
-import './Details.css'
-import supabase from '../supabaseClient';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { MapPin, Home, Bath, Square, Calendar, Phone, Mail, BadgeCheck } from 'lucide-react';
+import './Details.css';
+import  supabase from '../supabaseClient';
+import { useParams } from 'react-router-dom';
 import lenus from "../assets/lenus.jpg";
+import ImageModal from '../components/ImageModal';
 
 const Details = () => {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  //const [map, setMap] = useState(null);
   const [property, setProperty] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalImageIndex, setModalImageIndex] = useState(0);
+  
   const { id } = useParams();
-  const navigate = useNavigate();
+  const mapInstanceRef = useRef(null);
 
   useEffect(() => {
+    setProperty(null);
+    setLoading(true);
+
     const fetchProperty = async () => {
-      if (!id)
-        return;
-
-      setLoading(true);
-
-      const { data, error } = await supabase
-        .from('properties')
-        .select('*')
-        .eq('id', id)
-        .single();
-
+      if (!id) return;
+      const { data, error } = await supabase.from('properties').select('*').eq('id', id).single();
       if (error) {
-        console.error('Eroare la preluarea datelor: ', error)
+        console.error('Eroare la preluarea datelor: ', error);
         setProperty(null);
-      }
-      else {
+      } else {
         setProperty(data);
       }
-
       setLoading(false);
     };
 
@@ -42,175 +36,180 @@ const Details = () => {
   }, [id]);
   
   useEffect(() => {
-    if (property && property.lat && property.lng && document.getElementById('property-map')) {
-      import('leaflet').then(L => {
-        import('leaflet/dist/leaflet.css');
-        
-        const map = L.map('property-map').setView([property.lat, property.lng], 15);
-        
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {}).addTo(map);
-
-        L.marker([property.lat, property.lng])
-          .addTo(map)
-          .bindPopup(property.title);
-
-        return () => {
-          map.remove();
-        };
-      });
+    if (property?.lat && property.lng && document.getElementById('property-map')) {
+      if (!mapInstanceRef.current) {
+        import('leaflet').then(L => {
+          import('leaflet/dist/leaflet.css');
+          const map = L.map('property-map').setView([property.lat, property.lng], 15);
+          mapInstanceRef.current = map;
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {}).addTo(map);
+          L.marker([property.lat, property.lng]).addTo(map).bindPopup(property.title);
+        });
+      }
     }
+    return () => {
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+      }
+    };
   }, [property]);
 
-  const nextImage = () => {
-    if (property && property.image_urls && property.image_urls.length > 0) {
-      setCurrentImageIndex((prev) => (prev + 1) % property.image_urls.length);      
-    } 
+  const openModal = (index) => {
+    setModalImageIndex(index);
+    setIsModalOpen(true);
   };
 
-  const prevImage = () => {
-    if (property && property.image_urls && property.image_urls.length > 0)
-    setCurrentImageIndex((prev) => (prev - 1 + property.image_urls.length) % property.image_urls.length);
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const showNextImage = (e) => {
+    e.stopPropagation();
+    setModalImageIndex((prevIndex) => (prevIndex + 1) % property.image_urls.length);
+  };
+
+  const showPrevImage = (e) => {
+    e.stopPropagation();
+    setModalImageIndex((prevIndex) => (prevIndex - 1 + property.image_urls.length) % property.image_urls.length);
   };
 
   if (loading) {
-    return <div className='loading-message'>Se incarca detaliile proprietatii alese...</div>;
+    return <div className='loading-message'>Se încarcă detaliile proprietății...</div>;
   }
 
   if (!property) {
-    return <div className='error-message'>Proprietatea nu a fost gasita.</div>;
+    return <div className='error-message'>Proprietatea nu a fost găsită.</div>;
   }
 
+  const images = Array.isArray(property.image_urls) ? property.image_urls : [];
+  const totalImages = images.length;
+  const gridImages = images.slice(0, 5);
+
   return (
-    <div className="property-details-page">
-      <div className="container">
-        <div className="property-header">          
-          <button className="back-btn" onClick={() => navigate(-1)}>
-            <ArrowLeft size={20} />
-            Înapoi
-          </button>
-          <div className="title-section">   
-            <div className="title-top-row">
-              <span className="property-type">{property.type}</span>
-              <div className="property-address">
-                <MapPin size={16} />
+    <>
+      <div className="property-details-page">
+        <div className="container">
+          <div className="details-header">
+            <div className="details-header-main">
+              <h1 className="property-title">{property.name}</h1>
+              <div className="main-price">€{property.price?.toLocaleString()}/lună</div>
+            </div>
+            <div className="details-header-secondary">
+              <div className="details-header-secondary-left">
+                <span className="property-type">{property.type}</span>
+                <div className="property-address">
+                  <MapPin size={16} />
                   {property.address}
-              </div>  
-            </div>         
-            <h1 className="property-title">{property.name}</h1>
-
-          </div>
-          <div className="price-section">
-            <div className="price-details">€{property.priceDetails}/mp</div>
-            <div className="main-price">€{property.price.toLocaleString()}/luna</div>          
-          </div>
-        </div>
-
-        {property.image_urls && property.image_urls.length > 0 ? (
-          <div className="image-gallery">
-            <div className="main-image">
-              <img src={property.image_urls[currentImageIndex]} alt={`${property.title} ${currentImageIndex + 1}`} />
-              
-              {property.image_urls.length > 1 && (
-                <>
-                  <button className="nav-btn prev" onClick={prevImage}>❮</button>
-                  <button className="nav-btn next" onClick={nextImage}>❯</button>
-                  <div className="image-counter">
-                    {currentImageIndex + 1} / {property.image_urls.length}
-                  </div>
-                </>
+                </div>
+              </div>
+              {property.priceDetails && (
+                <div className="price-details">€{property.priceDetails}/mp</div>
               )}
             </div>
-            
-            {property.image_urls.length > 1 && (
-              <div className="thumbnail-grid">
-                {property.image_urls.map((image, index) => (
-                  <img
-                    key={index}
-                    src={image}
-                    alt={`${property.title} thumbnail ${index + 1}`}
-                    className={`thumbnail ${index === currentImageIndex ? 'active' : ''}`}
-                    onClick={() => setCurrentImageIndex(index)}
-                  />
-                ))}
-              </div>
-            )}
           </div>
-        ) : (
-          <div className="no-images-placeholder">Nu sunt disponibile imagini pentru această proprietate.</div>
-        )}
-
-        <div className="property-content">
-          <div className="property-info">
-            <div className="property-details">
-              <div className="detail-item">
-                <Square className="detail-icon" />
-                <span>{property.size} mp</span>
+          {totalImages > 0 ? (
+            <div className="image-grid-container">
+              <div className="grid-image-main" onClick={() => openModal(0)}>
+                <img src={gridImages[0]} alt={`${property.title} - imagine principală`} />
               </div>
-              <div className="detail-item">
-                <Home className="detail-icon" />
-                <span>{property.rooms} camere</span>
-              </div>
-              <div className="detail-item">
-                <Bath className="detail-icon" />
-                <span>{property.bathrooms} bai</span>
-              </div>
-              <div className="detail-item">
-                <Calendar className="detail-icon" />
-                <span>Construit în {property.year}</span>
+              <div className="grid-image-secondary">
+                {gridImages.slice(1).map((image, index) => {
+                  const isLastImageInGrid = index === 3;
+                  const hasMoreImages = totalImages > 5;
+                  
+                  return (
+                    <div 
+                      key={index} 
+                      className="grid-image-item" 
+                      onClick={() => openModal(index + 1)}
+                    >
+                      <img src={image} alt={`${property.title} - imagine ${index + 2}`} />
+                      {isLastImageInGrid && hasMoreImages && (
+                        <div className="view-all-overlay">
+                          <span>Vezi toate imaginile</span>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </div>
-
-            <div className="description-section">
-              <h2>Descriere</h2>
-              <p>{property.description}</p>
-            </div>
-
-            <div className="features-section">
-              <h2>Caracteristici</h2>
-              <div className="features-grid">
-                {property.features.map((feature, index) => (
-                  <div key={index} className="feature-item">
-                    ✓ {feature}
-                  </div>
-                ))}
-              </div>
+          ) : (
+            <div className="no-images-placeholder">Nu sunt disponibile imagini pentru această proprietate.</div>
+          )}
+          <div className="details-subtitle-bar">
+            <span className="property-type-mobile">{property.type}</span>
+            <div className="property-address-mobile">
+              <MapPin size={16} />
+              {property.address}
             </div>
           </div>
 
-          <div className="property-sidebar">
-            <div className="contact-section">
-              <h2>Contact Agent</h2>
-              <div className="agent-card">
-                <div className="agent-info">
-                  <div className="agent-avatar">
-                    <img src={lenus} alt="Elena Miu" />
-                  </div>
-                  <div className="agent-details">
-                    <h3>Elena Miu</h3>
-                    <p>10+ Ani Experienta</p>
+          <div className="property-content">
+            <div className="property-info">
+              <div className="property-details">                
+                <div className="detail-item"><Calendar className="detail-icon" />Construit în {property.year}</div>
+                <div className="detail-item"><Square className="detail-icon" />{property.size} mp</div>
+                <div className="detail-item"><Home className="detail-icon" />{property.rooms} camere</div>
+              </div>
+
+              <div className="description-section">
+                <h2>Descriere</h2>
+                <p style={{ whiteSpace: "pre-line" }}>{property.description}</p>
+              </div>
+
+              {Array.isArray(property.features) && property.features.length > 0 && (
+                <div className="features-section">
+                  <h2>Caracteristici</h2>
+                  <div className="features-grid">
+                    {property.features.map((feature, index) => (
+                      <div key={index} className="feature-item">✓ {feature}</div>
+                    ))}
                   </div>
                 </div>
-                <div className="contact-buttons">
-                  <button className="contact-btn primary">
-                    <Phone size={18} />
-                    Sună acum
-                  </button>
-                  <button className="contact-btn secondary">
-                    <Mail size={18} />
-                    Trimite email
-                  </button>
+              )}
+            </div>
+
+            <div className="property-sidebar">
+              <div className="contact-section">
+                <h2>Contact Agent</h2>
+                <div className="agent-card">
+                  <div className="agent-info">
+                    <div className="agent-avatar"><img src={lenus} alt="Elena Miu" /></div>
+                    <div className="agent-details">
+                      <h3>Elena Miu <BadgeCheck className="detail-icon"/></h3>
+                      <p>10+ Ani Experienta</p>
+                    </div>
+                  </div>
+                  <div className="contact-buttons">
+                    <button className="contact-btn primary"><Phone size={18} /> Sună acum</button>
+                    <button className="contact-btn secondary"><Mail size={18} /> Trimite email</button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="map-section">
-          <h2>Localizare</h2>
-          <div id="property-map" className="leaflet-map"></div>
+          <div className="map-section">
+            <h2>Localizare</h2>
+            <div id="property-map" className="leaflet-map"></div>
+          </div>
         </div>
       </div>
-    </div>
+
+      {isModalOpen && (
+        <ImageModal 
+          images={images}
+          currentIndex={modalImageIndex}
+          onClose={closeModal}
+          onNext={showNextImage}
+          onPrev={showPrevImage}
+          title={property.name}
+          totalImages={totalImages}
+        />
+      )}
+    </>
   );
 };
 

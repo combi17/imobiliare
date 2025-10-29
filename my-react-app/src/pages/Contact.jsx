@@ -1,37 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useForm } from '@formspree/react';
 import './Contact.css'; 
 import { Phone, Mail, MapPin, Linkedin, Facebook } from 'lucide-react';
 import lenus from "../assets/lenus.jpg";
 
 const Contact = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    subject: '',
-    message: '',
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState(null);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setSubmitStatus(null);
-    
-    console.log('Date formular:', formData);
-    
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    setIsSubmitting(false);
-    setSubmitStatus('success');
-    setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
-  };
+  const [state, handleSubmit] = useForm('xeopkkpk');
 
   return (
     <div className="contact-page-container">
@@ -54,9 +28,7 @@ const Contact = () => {
                     type="text" 
                     id="name" 
                     name="name" 
-                    placeholder='Ion Popescu'
-                    value={formData.name}
-                    onChange={handleChange}
+                    placeholder="ex: Ion Popescu"
                     required 
                   />
                 </div>
@@ -66,9 +38,7 @@ const Contact = () => {
                     type="email" 
                     id="email" 
                     name="email" 
-                    placeholder='ion.popescu@gmail.com'
-                    value={formData.email}
-                    onChange={handleChange}
+                    placeholder='ex: ion.popescu@gmail.com'
                     required 
                   />
                 </div>
@@ -80,21 +50,23 @@ const Contact = () => {
                     type="tel" 
                     id="phone" 
                     name="phone" 
-                    placeholder='0712345678'
-                    value={formData.phone}
-                    onChange={handleChange}
+                    placeholder='ex: 0712345678'
                   />
                 </div>
                 <div className="form-group">
                   <label htmlFor="subject">Subiect</label>
-                  <input 
-                    type="text" 
+                  <select
                     id="subject" 
                     name="subject"
-                    value={formData.subject}
-                    onChange={handleChange} 
+                    defaultValue=""
                     required 
-                  />
+                  >
+                    <option value="" disabled>Alege un subiect</option>
+                    <option value="Cerere oferta">Doresc o oferta</option>
+                    <option value="Cerere vizualizare">Doresc o vizualizare</option>
+                    <option value="Evaluare proprietate">Doresc o evaluare</option>
+                    <option value="Alt subiect">Alt subiect</option>                                      
+                  </select>
                 </div>
               </div>
               <div className="form-group">
@@ -103,24 +75,28 @@ const Contact = () => {
                   id="message" 
                   name="message" 
                   rows="20" 
-                  value={formData.message}
-                  onChange={handleChange}
+                  placeholder='Scrie aici mesajul tău...'
                   required
                 ></textarea>
               </div>
               
-              <button type="submit" className="submit-btn" disabled={isSubmitting}>
-                {isSubmitting ? 'Se trimite...' : 'Trimite Mesajul'}
-              </button>
+             {state.succeeded ? (
+              <div className='form-status succes'>Mulțumim! Mesajul tău a fost trimis.</div>
+            ) : (
+              <>
+                <button type="submit" className='submit-btn' disabled={state.submitting}>
+                  {state.submitting ? 'Se trimite' : 'Trimite Mesajul'}
+                </button>
 
-              {submitStatus === 'success' && (
-                <div className="form-status success">Mesajul tău a fost trimis cu succes!</div>
-              )}
-              {submitStatus === 'error' && (
-                <div className="form-status error">A apărut o eroare. Te rugăm să încerci mai târziu.</div>
-              )}
-            </form>
-          </div>
+                {state.errors && (
+                  <div className='form-status error'>
+                      A apărut o eroare. Te rugăm să încerci mai târziu.
+                  </div>
+                )}
+              </>
+            )}
+          </form>
+        </div>
 
           <div className="contact-info-wrapper">
             <h2>Contact direct</h2>

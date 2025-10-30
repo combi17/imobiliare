@@ -5,6 +5,8 @@ import Footer from './components/Footer.jsx'
 import Properties from './pages/Properties.jsx'
 import Details from "./pages/Details.jsx";
 import Contact from "./pages/Contact.jsx";
+import Despre from "./pages/Despre.jsx";
+
 import "./App.css";
 
 export default function App() {
@@ -19,6 +21,7 @@ export default function App() {
             <Route path="properties" element = {<Properties />} /> 
             <Route path="properties/:id" element = {<Details />} />
             <Route path="/contact" element = {<Contact />} />
+            <Route path="/despre" element = {<Despre />} />
           </Routes>          
         </main>      
         

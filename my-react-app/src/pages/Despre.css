@@ -1,0 +1,303 @@
+/* Folosim variabilele tale de culoare definite în alte fișiere */
+:root {
+  --primary: #1da397;
+  --navy: #2c3e50;
+  --dark-gray: #4a5568;
+  --light-gray: #f8f9fa;
+  --accent-subtle: #e2e8f0;
+  --white: #ffffff;
+}
+
+.despre-page-container {
+  min-height: 100vh;
+  background: var(--white);
+  padding-top: 80px; /* Doar spațiul pentru header-ul principal */
+}
+
+/* === Secțiunea Hero === */
+.despre-hero {
+  position: relative;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--white);
+  background-size: cover;
+  background-position: center 60%;
+  margin-top: -80px; /* Tragem hero-ul sub header */
+}
+
+.despre-hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(0deg, rgba(44, 62, 80, 0.7), rgba(44, 62, 80, 0.4));
+}
+
+.despre-hero .container {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+}
+
+.despre-title {
+  font-size: 2.8rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+.despre-subtitle {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  opacity: 0.9;
+}
+
+/* === Stiluri Generale Secțiuni === */
+.despre-section {
+  padding: 4rem 0;
+}
+
+.section-title {
+  color: var(--navy);
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 3rem;
+  text-align: center;
+  position: relative;
+}
+/* Linie decorativă sub titlu */
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background-color: var(--primary);
+}
+
+/* === Secțiunea Misiune (Overview) === */
+.despre-section:first-of-type {
+  padding-top: 5rem;
+}
+
+/* Layout cu 2 coloane pentru Misiune */
+.despre-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 3rem;
+}
+
+.despre-section-text {
+  flex-basis: 55%;
+}
+
+.despre-section-text h2 {
+  color: var(--navy);
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+.despre-section-text p {
+  color: var(--dark-gray);
+  font-size: 1rem;
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+}
+
+.despre-section-image-wrapper {
+  flex-basis: 40%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.despre-section-image {
+  width: 100%;
+  max-width: 400px; /* O lățime maximă */
+  height: auto;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* === Secțiunea Valori (Carduri) === */
+.values-section {
+  flex-direction: column;
+  background: var(--light-gray);
+  padding: 4rem 2rem;
+  border-radius: 20px;
+  margin-top: 3rem;
+}
+
+.values-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  width: 100%;
+}
+
+.value-card {
+  background: var(--white);
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid var(--accent-subtle);
+  text-align: left;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.value-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
+}
+
+.value-icon {
+  width: 48px;
+  height: 48px;
+  color: var(--primary);
+  background: rgba(29, 163, 151, 0.1);
+  padding: 10px;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.value-card h3 {
+  color: var(--navy);
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.value-card p {
+  color: var(--dark-gray);
+  line-height: 1.6;
+}
+
+
+/* === Secțiunea Istoric (Timeline) === */
+.milestones-section {
+  display: block; /* Anulăm flex */
+  padding-top: 4rem;
+}
+
+.timeline {
+  position: relative;
+  max-width: 800px;
+  margin: 2rem auto 0;
+  /* Linia centrală a timeline-ului */
+  border-left: 3px solid var(--accent-subtle);
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 3rem;
+  padding-left: 2.5rem;
+}
+
+.timeline-item:last-child {
+  margin-bottom: 0;
+}
+
+/* Iconița de pe timeline */
+.timeline-icon-wrapper {
+  position: absolute;
+  left: -24px;
+  top: 0;
+  width: 48px;
+  height: 48px;
+  background-color: var(--white);
+  border: 3px solid var(--accent-subtle);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.timeline-icon {
+  color: var(--primary);
+}
+
+/* Efect la hover pe item */
+.timeline-item:hover .timeline-icon-wrapper {
+  border-color: var(--primary);
+  background-color: var(--primary);
+}
+.timeline-item:hover .timeline-icon {
+  color: var(--white);
+}
+.timeline-item:hover .timeline-title {
+  color: var(--primary);
+}
+
+.timeline-content {
+  position: relative;
+}
+
+.timeline-year {
+  color: var(--dark-gray);
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+  display: block;
+}
+
+.timeline-title {
+  color: var(--navy);
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  transition: color 0.3s ease;
+}
+
+.timeline-description {
+  color: var(--dark-gray);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* === Responsive Design === */
+@media (max-width: 900px) {
+  .despre-section {
+    flex-direction: column;
+  }
+  
+  .despre-section-text {
+    flex-basis: 100%;
+  }
+
+  .despre-section-image-wrapper {
+    flex-basis: 100%;
+    order: -1; /* Mutăm imaginea deasupra textului */
+  }
+
+  .values-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 1.5rem;
+  }
+  .despre-title {
+    font-size: 2.2rem;
+  }
+  .despre-subtitle {
+    font-size: 1.1rem;
+  }
+  
+  .values-section {
+    padding: 3rem 1.5rem;
+  }
+}

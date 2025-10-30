@@ -1,11 +1,8 @@
 import React from 'react';
 import { useForm } from '@formspree/react';
 import './Contact.css'; 
-import { Phone, Mail, MapPin, Linkedin, Facebook } from 'lucide-react';
+import { Phone, Mail, MapPin, Linkedin, Instagram, Facebook} from 'lucide-react';
 import lenus from "../assets/lenus.jpg";
-
-
-//arata cam urat css-ul pentru formul acela, ti am trimis o poza cu cum arata defapt, as vrea sa fie tot chenarul cu optiuni inconjurat de o margine, ca in restul componentelor, poti vedea ca acum partea din dreapta si cea de jos nu au border, as vrea ca atunci cand dau hover pe o varianta sa apara albastrul folosit in tot site ul si vreau sa nu mai apara varianta cu "alege un subiect" in meniul dropdown. te rog explica mi ce modificari trebuie sa fac in css ca sa obtin lookul dorit
 
 const Contact = () => {
   const [state, handleSubmit] = useForm('xeopkkpk');
@@ -64,10 +61,10 @@ const Contact = () => {
                     defaultValue=""
                     required 
                   >
-                    <option value="" disabled>Alege un subiect</option>
-                    <option value="Cerere oferta">Doresc o oferta</option>
-                    <option value="Cerere vizualizare">Doresc o vizualizare</option>
-                    <option value="Evaluare proprietate">Doresc o evaluare</option>
+                    <option value="" disabled hidden>Alege un subiect</option>
+                    <option value="Cerere oferta">Cerere oferta</option>
+                    <option value="Cerere vizualizare">Cerere vizualizare</option>
+                    <option value="Evaluare proprietate">Evaluare proprietate</option>
                     <option value="Alt subiect">Alt subiect</option>                                      
                   </select>
                 </div>
@@ -128,17 +125,33 @@ const Contact = () => {
                 </div>
               </div>
             </div>
-
+                      {/*
+            <div className="company-socials-card">
+              <h4>Urmărește-ne pe social media</h4>
+              <div className="agent-socials socials-company">
+                <a href="https://www.linkedin.com/company/premium-east8/posts/?feedView=all " target="_blank" rel="noopener noreferrer" className="social-icon">
+                  <Linkedin size={20} />
+                </a>
+                <a href="https://www.facebook.com/compania-ta" target="_blank" rel="noopener noreferrer" className="social-icon">
+                  <Facebook size={20} />
+                </a>
+                <a href="https://www.facebook.com/compania-ta" target="_blank" rel="noopener noreferrer" className="social-icon">
+                  <Instagram size={20} />
+                </a>
+              </div>
+            </div>
+                      o sa revenim la treaba asta                        */}
+                      
             <div className="agent-contact-card">
               <img src={lenus} alt="Elena Miu" className="agent-avatar" />
               <h3>Elena Miu</h3>
               <p>Agentul tău cu peste 10 ani experiență în domeniu</p>
               <div className="agent-socials">
-                <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" className="social-icon">
+                <a href="https://www.linkedin.com/in/elenamiu/?originalSubdomain=ro" target="_blank" rel="noopener noreferrer" className="social-icon">
                   <Linkedin size={20} />
                 </a>
-                <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" className="social-icon">
-                  <Facebook size={20} />
+                <a href="https://www.instagram.com/elena_miu_/" target="_blank" rel="noopener noreferrer" className="social-icon">
+                  <Instagram size={20} />
                 </a>
               </div>
             </div>

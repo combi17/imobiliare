@@ -11,7 +11,7 @@ const Header = () => {
           <ul className="nav-links">
             <li><Link to="/">Home</Link></li>
             <li><Link to="/properties">Proprietăți</Link></li>
-            <li><Link to="/portofoliu">Portofoliu</Link></li>
+            <li><Link to="/despre">Despre noi</Link></li>
             <li><Link to="/contact">Contact</Link></li>
           </ul>
           <Link to="/contact" className="cta-nav">Obține Evaluare</Link>

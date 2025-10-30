@@ -289,14 +289,12 @@
   }
 }
 
-/* Adaugă acest selector nou pentru a stiliza placeholder-ele */
 .form-group input::placeholder,
 .form-group textarea::placeholder {
-  color: #a0aec0; /* O nuanță de gri deschis */
-  opacity: 1; /* Asigură vizibilitatea pe toate browserele */
+  color: #a0aec0; 
+  opacity: 1;
 }
 
-/* Adaugă aceste stiluri pentru noul element <select> */
 .form-group select {
   width: 100%;
   padding: 0.875rem 1rem;
@@ -320,4 +318,27 @@
   outline: none;
   border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(29, 163, 151, 0.15);
+}
+
+.company-socials-card {
+  background: var(--light-gray);
+  border-radius: 15px;
+  border: 1px solid var(--accent-subtle);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.company-socials-card h4 {
+  color: var(--navy);
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.socials-company {
+  justify-content: center;
+  padding-bottom: 0;
+  margin-bottom: 0;
+  border-bottom: none;
 }

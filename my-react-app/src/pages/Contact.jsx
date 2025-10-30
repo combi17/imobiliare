@@ -4,6 +4,9 @@ import './Contact.css';
 import { Phone, Mail, MapPin, Linkedin, Facebook } from 'lucide-react';
 import lenus from "../assets/lenus.jpg";
 
+
+//arata cam urat css-ul pentru formul acela, ti am trimis o poza cu cum arata defapt, as vrea sa fie tot chenarul cu optiuni inconjurat de o margine, ca in restul componentelor, poti vedea ca acum partea din dreapta si cea de jos nu au border, as vrea ca atunci cand dau hover pe o varianta sa apara albastrul folosit in tot site ul si vreau sa nu mai apara varianta cu "alege un subiect" in meniul dropdown. te rog explica mi ce modificari trebuie sa fac in css ca sa obtin lookul dorit
+
 const Contact = () => {
   const [state, handleSubmit] = useForm('xeopkkpk');
 

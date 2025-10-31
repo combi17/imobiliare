@@ -1,6 +1,7 @@
 import React from 'react'
 import { useEffect } from 'react';
 import Slideshow from './Slideshow.jsx';
+import { Link } from "react-router-dom";
 import '../pages/HomePage.css';
 
 const Hero = () => {
@@ -117,7 +118,7 @@ function animateCounters() {
         <div className="cta-container">
             <h2>Pregătit să îți transformi visul în realitate?</h2>
             <p>Alătură-te celor peste 1200 de clienți mulțumiți care au ales East8 pentru nevoile lor imobiliare. Începe astăzi călătoria către proprietatea ta ideală.</p>
-            <a href="#contact" className="btn-primary">📞 Contactează-ne acum</a>
+            <Link to="/contact" className="btn-primary">📞 Contactează-ne acum</Link>
         </div>
     </section>      
     </>

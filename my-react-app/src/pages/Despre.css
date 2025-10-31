@@ -1,4 +1,4 @@
-/* Folosim variabilele tale de culoare definite în alte fișiere */
+
 :root {
   --primary: #1da397;
   --navy: #2c3e50;
@@ -11,10 +11,9 @@
 .despre-page-container {
   min-height: 100vh;
   background: var(--white);
-  padding-top: 80px; /* Doar spațiul pentru header-ul principal */
+  padding-top: 80px;
 }
 
-/* === Secțiunea Hero === */
 .despre-hero {
   position: relative;
   height: 400px;
@@ -25,7 +24,7 @@
   color: var(--white);
   background-size: cover;
   background-position: center 60%;
-  margin-top: -80px; /* Tragem hero-ul sub header */
+  margin-top: -80px;
 }
 
 .despre-hero-overlay {
@@ -56,7 +55,6 @@
   opacity: 0.9;
 }
 
-/* === Stiluri Generale Secțiuni === */
 .despre-section {
   padding: 4rem 0;
 }
@@ -69,7 +67,7 @@
   text-align: center;
   position: relative;
 }
-/* Linie decorativă sub titlu */
+
 .section-title::after {
   content: '';
   position: absolute;
@@ -81,12 +79,10 @@
   background-color: var(--primary);
 }
 
-/* === Secțiunea Misiune (Overview) === */
 .despre-section:first-of-type {
   padding-top: 5rem;
 }
 
-/* Layout cu 2 coloane pentru Misiune */
 .despre-section {
   display: flex;
   justify-content: space-between;
@@ -121,20 +117,20 @@
 
 .despre-section-image {
   width: 100%;
-  max-width: 400px; /* O lățime maximă */
+  max-width: 400px;
   height: auto;
   border-radius: 12px;
   object-fit: cover;
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
 }
 
-/* === Secțiunea Valori (Carduri) === */
 .values-section {
   flex-direction: column;
   background: var(--light-gray);
   padding: 4rem 2rem;
   border-radius: 20px;
-  margin-top: 3rem;
+  margin: 3rem auto 3rem auto;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
 }
 
 .values-grid {
@@ -183,18 +179,18 @@
   line-height: 1.6;
 }
 
-
-/* === Secțiunea Istoric (Timeline) === */
 .milestones-section {
-  display: block; /* Anulăm flex */
-  padding-top: 4rem;
+  display: block;
+  padding-top: 4rem 0;
+  transform: translateX(-50px);
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 .timeline {
   position: relative;
   max-width: 800px;
   margin: 2rem auto 0;
-  /* Linia centrală a timeline-ului */
   border-left: 3px solid var(--accent-subtle);
 }
 
@@ -208,7 +204,6 @@
   margin-bottom: 0;
 }
 
-/* Iconița de pe timeline */
 .timeline-icon-wrapper {
   position: absolute;
   left: -24px;
@@ -228,7 +223,6 @@
   color: var(--primary);
 }
 
-/* Efect la hover pe item */
 .timeline-item:hover .timeline-icon-wrapper {
   border-color: var(--primary);
   background-color: var(--primary);
@@ -266,7 +260,6 @@
   line-height: 1.6;
 }
 
-/* === Responsive Design === */
 @media (max-width: 900px) {
   .despre-section {
     flex-direction: column;
@@ -278,7 +271,7 @@
 
   .despre-section-image-wrapper {
     flex-basis: 100%;
-    order: -1; /* Mutăm imaginea deasupra textului */
+    order: -1;
   }
 
   .values-grid {
@@ -300,4 +293,65 @@
   .values-section {
     padding: 3rem 1.5rem;
   }
+}
+
+.testimonials-section {
+    padding: 4rem 0;
+    background: var(--white);
+}
+
+.testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.testimonial-card {
+    background: var(--light-gray);
+    border: 1px solid var(--accent-subtle);
+    padding: 2rem;
+    border-radius: 12px;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.testimonial-card:hover {
+    background: #eaf8f7;
+    border-color: var(--primary);
+    transform: translateY(-3px);
+}
+
+.testimonial-quote {
+    font-size: 1.1rem;
+    color: var(--navy);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.testimonial-quote::before {
+    content: "“";
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    font-size: 3rem;
+    color: var(--primary);
+    line-height: 1;
+    opacity: 0.2;
+}
+
+.testimonial-author-info {
+    border-top: 1px solid var(--accent-subtle);
+    padding-top: 1rem;
+    font-size: 0.95rem;
+}
+
+.author-name {
+    font-weight: 600;
+    color: var(--navy);
+}
+
+.author-location {
+    color: var(--dark-gray);
 }

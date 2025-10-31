@@ -5,10 +5,8 @@
 }
 
 .view-header {
-  background: white;
-  border-bottom: 1px solid #e9ecef;
-  padding: 0.5rem 0;
-  position: sticky;
+  padding-top: 1rem;
+  
   top: 80px;
   z-index: 10;
 }
@@ -55,13 +53,13 @@
 }
 
 .main-content-area.list {
-  grid-template-columns: 280px 1fr; /* sidebar + lista */
+  grid-template-columns: 280px 1fr;
 }
 .main-content-area.split {
-  grid-template-columns: 280px 1fr 400px; /* sidebar + lista + harta */
+  grid-template-columns: 280px 1fr 400px; 
 }
 .main-content-area.map {
-  grid-template-columns: 1fr; /* doar harta */
+  grid-template-columns: 1fr;
   padding: 0;
 }
 
@@ -72,7 +70,7 @@
   padding: 1.5rem;
   height: fit-content;
   position: sticky;
-  top: 160px;
+  top: 130px;
 }
 .filters-header {
   display: flex;

@@ -1,10 +1,9 @@
 import React from 'react';
-import './Despre.css'; // Vom crea acest fișier imediat
+import './Despre.css';
 import { Briefcase, Building, Trophy, Target, TrendingUp } from 'lucide-react';
-import heroImage from '../assets/birou2.jpg'; // Poți folosi o imagine reprezentativă din assets
+import heroImage from '../assets/birou2.jpg';
 import lenus from "../assets/lenus.jpg";
 
-// Datele pentru timeline (le poți modifica)
 const milestones = [
   {
     year: '2023',
@@ -32,10 +31,27 @@ const milestones = [
   }
 ];
 
+const testimonials = [
+        {
+            quote: "Serviciile East8 au depășit așteptările. Am obținut o vânzare rapidă la un preț pe care nu ne așteptam să-l atingem. Recomandăm cu încredere pentru excelența și profesionalismul de care au dat dovadă.",
+            author: "Andrei P., Investitor Imobiliar",
+            location: "Nordul Bucureștiului"
+        },
+        {
+            quote: "Transparența și cunoașterea pieței de către Elena Miu au fost esențiale. Am găsit proprietatea perfectă pentru birourile noastre, iar procesul a fost impecabil de la A la Z.",
+            author: "Maria S., CEO Tech Solutions",
+            location: "Zona Centrală"
+        },
+        {
+            quote: "Pentru mine, factorul decisiv a fost încrederea. East8 livrează nu doar tranzacții, ci și parteneriate pe termen lung. Servicii premium, rezultate pe măsură.",
+            author: "Alexandru V., Client Rezidențial",
+            location: "Băneasa"
+        }
+    ];
+
 const Despre = () => {
   return (
     <div className="despre-page-container">
-      {/* === Secțiunea Hero === */}
       <div className="despre-hero" style={{ backgroundImage: `url(${heroImage})` }}>
         <div className="despre-hero-overlay"></div>
         <div className="container">
@@ -47,7 +63,6 @@ const Despre = () => {
       </div>
 
       <div className="container">
-        {/* === Secțiunea Misiune (Overview) === */}
         <div className="despre-section">
           <div className="despre-section-text">
             <h2>Viziunea Noastră</h2>
@@ -59,12 +74,10 @@ const Despre = () => {
             </p>
           </div>
           <div className="despre-section-image-wrapper">
-            {/* Aici poți pune o altă poză, poate cu echipa */}
             <img src={lenus} alt="Echipa East8" className="despre-section-image" />
           </div>
         </div>
 
-        {/* === Secțiunea Valori (Carduri) === */}
         <div className="despre-section values-section">
           <h2 className="section-title">Valorile Noastre Fundamentale</h2>
           <div className="values-grid">
@@ -92,7 +105,21 @@ const Despre = () => {
           </div>
         </div>
 
-        {/* === Secțiunea Istoric (Timeline) === */}
+        <div className="despre-section testimonials-section">
+          <h2 className="section-title">Ce Spun Clienții Noștri</h2>
+              <div className="testimonials-grid">
+                  {testimonials.map((item, index) => (
+                      <div className="testimonial-card" key={index}>
+                          <p className="testimonial-quote">"{item.quote}"</p>
+                          <div className="testimonial-author-info">
+                              <span className="author-name">{item.author}</span>
+                              <span className="author-location"> - {item.location}</span>
+                          </div>
+                      </div>
+                  ))}
+              </div>
+          </div>
+
         <div className="despre-section milestones-section">
           <h2 className="section-title">Istoric Tranzacții Relevante</h2>
           <div className="timeline">

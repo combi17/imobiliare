@@ -35,7 +35,7 @@ const SearchCard = () => {
             <p>Descoperă proprietățile de lux și investițiile imobiliare de elită cu East8.</p>
             <div className="hero-buttons">
               <Link to="/properties" className="btn-primary"> Explorează Proprietăți </Link>
-              <a href="#evaluare" className="btn-secondary"> Evaluare Gratuită</a>
+              <Link to="/contact" className="btn-secondary"> Evaluare Gratuită</Link>
             </div>
           </div>
           <div className="search-widget">

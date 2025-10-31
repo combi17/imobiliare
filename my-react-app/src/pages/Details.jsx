@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { MapPin, Home, Bath, Square, Calendar, Phone, Mail, BadgeCheck } from 'lucide-react';
 import './Details.css';
 import  supabase from '../supabaseClient';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import lenus from "../assets/lenus.jpg";
 import ImageModal from '../components/ImageModal';
 
@@ -15,6 +15,11 @@ const Details = () => {
   
   const { id } = useParams();
   const mapInstanceRef = useRef(null);
+
+  const navigate = useNavigate();
+  const handleClick = () => {
+    navigate("/contact");
+  }
 
   useEffect(() => {
     setProperty(null);
@@ -183,8 +188,8 @@ const Details = () => {
                     </div>
                   </div>
                   <div className="contact-buttons">
-                    <button className="contact-btn primary"><Phone size={18} /> Sună acum</button>
-                    <button className="contact-btn secondary"><Mail size={18} /> Trimite email</button>
+                    <button onClick={() => window.location.href = "tel:+40712345678"} className="contact-btn primary"><Phone size={18} /> Sună acum</button>
+                    <button onClick={handleClick} className="contact-btn secondary"><Mail size={18} /> Trimite email</button>
                   </div>
                 </div>
               </div>

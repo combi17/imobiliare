@@ -1,4 +1,4 @@
-
+/* Folosim variabilele tale de culoare definite în alte fișiere */
 :root {
   --primary: #1da397;
   --navy: #2c3e50;
@@ -11,20 +11,23 @@
 .despre-page-container {
   min-height: 100vh;
   background: var(--white);
-  padding-top: 80px;
+  padding-top: 80px; /* Doar spațiul pentru header-ul principal */
 }
 
+/* === MODIFICARE 1: Secțiunea Hero === */
 .despre-hero {
   position: relative;
   height: 100vh;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column; /* Aliniem titlul (sus) și cardurile (jos) */
+  justify-content: flex-start; /* Aliniem titlul sus */
   text-align: center;
   color: var(--white);
   background-size: cover;
   background-position: center 60%;
   margin-top: -80px;
+  padding-top: 10rem; /* Spațiu de sus pentru titlu */
+  box-sizing: border-box;
 }
 
 .despre-hero-overlay {
@@ -34,11 +37,12 @@
   width: 100%;
   height: 100%;
   background: linear-gradient(0deg, rgba(44, 62, 80, 0.7), rgba(44, 62, 80, 0.4));
+  z-index: 1; /* Stă sub conținut */
 }
 
 .despre-hero .container {
   position: relative;
-  z-index: 2;
+  z-index: 2; /* Titlul stă peste overlay */
   max-width: 800px;
 }
 
@@ -55,61 +59,57 @@
   opacity: 0.9;
 }
 
-.despre-section {
-  padding: 4rem 0;
-}
-
-.section-title {
-  color: var(--navy);
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 3rem;
-  text-align: center;
-  position: relative;
-}
-
-.section-title::after {
-  content: '';
+/* Container Viziune (josul paginii) */
+.hero-content-overlay {
   position: absolute;
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
-  height: 3px;
-  background-color: var(--primary);
+  bottom: 4rem; /* Spațiu față de baza ecranului */
+  left: 0;
+  right: 0;
+  z-index: 3; /* Peste overlay */
+  padding: 0 1.5rem;
 }
 
- /*
-.despre-section:first-of-type {
-  padding-top: 5rem;
-} 
-*/
-
-.despre-section {
+.viziune-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 3rem;
+  max-width: 1200px; /* Aliniat cu .container-ul mare */
+  margin: 0 auto;
 }
 
-.despre-section-text {
+/* Card Viziune cu fundal transparent */
+.despre-section-text-card {
   flex-basis: 55%;
+  /* Efect de sticlă (glassmorphism) */
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  
+  padding: 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.1);
+  text-align: left;
 }
 
-.despre-section-text h2 {
-  color: var(--navy);
+/* Textul de pe cardul Viziune trebuie să fie alb/lizibil */
+.despre-section-text-card h2 {
+  color: var(--white);
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 1.5rem;
 }
 
-.despre-section-text p {
-  color: var(--dark-gray);
+.despre-section-text-card p {
+  color: var(--light-gray);
   font-size: 1rem;
   line-height: 1.8;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0;
+  opacity: 0.9;
 }
 
+/* Imaginea agentului */
 .despre-section-image-wrapper {
   flex-basis: 40%;
   display: flex;
@@ -123,16 +123,49 @@
   height: auto;
   border-radius: 12px;
   object-fit: cover;
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2); /* Umbră mai pronunțată */
+  border: 1px solid rgba(255, 255, 255, 0.1); /* Border subtil */
 }
 
+/* Delay-uri animații Hero */
+.despre-section-text-card.animate__fadeInLeft {
+  animation-delay: 0.5s;
+}
+.despre-section-image-wrapper.animate__fadeInRight {
+  animation-delay: 0.7s;
+}
+
+
+/* === Stiluri Generale Secțiuni (sub hero) === */
+.despre-section {
+  padding: 5rem 0; /* Am mărit padding-ul general */
+}
+
+.section-title {
+  color: var(--navy);
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 3rem;
+  text-align: center;
+  position: relative;
+}
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background-color: var(--primary);
+}
+
+/* === MODIFICARE 2: Secțiunea Valori (Carduri) === */
 .values-section {
   flex-direction: column;
   background: var(--light-gray);
-  padding: 4rem 2rem;
+  padding: 5rem 2rem;
   border-radius: 20px;
-  margin: 3rem auto 3rem auto;
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
 }
 
 .values-grid {
@@ -149,13 +182,24 @@
   border: 1px solid var(--accent-subtle);
   text-align: left;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  opacity: 0; /* Inițial ascuns pentru animația individuală */
+}
+
+/* Animație eșalonată (stagger) */
+.value-card.animate__fadeInUp:nth-child(1) {
+  animation-delay: 0.2s;
+}
+.value-card.animate__fadeInUp:nth-child(2) {
+  animation-delay: 0.4s;
+}
+.value-card.animate__fadeInUp:nth-child(3) {
+  animation-delay: 0.6s;
 }
 
 .value-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
 }
-
 .value-icon {
   width: 48px;
   height: 48px;
@@ -168,48 +212,182 @@
   align-items: center;
   justify-content: center;
 }
-
 .value-card h3 {
   color: var(--navy);
   font-size: 1.25rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
 }
-
 .value-card p {
   color: var(--dark-gray);
   line-height: 1.6;
 }
 
+/* === MODIFICARE 3: Secțiunea Testimonials === */
+.testimonials-section {
+  padding: 5rem 0;
+}
+
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Două coloane */
+  gap: 2rem;
+}
+
+.testimonial-card {
+  background: var(--white);
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid var(--accent-subtle);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  text-align: center; /* Centram conținutul */
+}
+
+/* Al treilea card, centrat */
+.testimonial-card:nth-child(3) {
+  grid-column: 1 / -1; /* Ocupă ambele coloane de grid */
+  max-width: 50%; /* Dar are lățime de 50% */
+  margin: 1rem auto 0; /* Și se centrează automat */
+  justify-self: center; /* Centrare extra */
+}
+
+/* Avatarul rotund */
+.testimonial-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--accent-subtle);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 auto 1.5rem; /* Centrat deasupra textului */
+}
+
+.testimonial-quote {
+  color: var(--dark-gray);
+  font-style: italic;
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+}
+.testimonial-author-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.author-name {
+  color: var(--navy);
+  font-weight: 600;
+}
+.author-location {
+  color: var(--dark-gray);
+  font-size: 0.9rem;
+}
+
+
+/* === MODIFICARE 4: Secțiunea Istoric (Timeline) Rescrisă === */
 .milestones-section {
   display: block;
-  padding-top: 4rem 0;
-  transform: translateX(-50px);
-  max-width: 900px;
-  margin: 0 auto;
+  padding-top: 5rem;
 }
 
 .timeline {
   position: relative;
   max-width: 800px;
   margin: 2rem auto 0;
-  border-left: 3px solid var(--accent-subtle);
 }
 
-.timeline-item {
+/* Linia centrală */
+.timeline::after {
+  content: '';
+  position: absolute;
+  width: 3px;
+  background-color: var(--accent-subtle);
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  margin-left: -1.5px;
+  z-index: 1; /* Linia e în spate */
+}
+
+/* Container-ul pentru item (stânga/dreapta) */
+.timeline-item-container {
+  padding: 10px 40px;
   position: relative;
-  margin-bottom: 3rem;
-  padding-left: 2.5rem;
+  background-color: inherit;
+  width: 50%;
+  opacity: 0; /* Ascuns pentru animație */
+  box-sizing: border-box;
+  z-index: 2; /* Item-ul e în față */
 }
 
-.timeline-item:last-child {
-  margin-bottom: 0;
+/* Poziționare stânga/dreapta */
+.timeline-item-container.left {
+  left: 0;
+}
+.timeline-item-container.right {
+  left: 50%;
 }
 
+/* Săgețile cardurilor */
+.timeline-item-container::before {
+  content: ' ';
+  position: absolute;
+  top: 32px;
+  width: 0;
+  height: 0;
+  border: 10px solid transparent;
+  z-index: 1;
+}
+
+.timeline-item-container.left::before {
+  right: 30px;
+  border-left-color: var(--accent-subtle);
+}
+
+.timeline-item-container.right::before {
+  left: 30px;
+  border-right-color: var(--accent-subtle);
+}
+
+.timeline-item-container::after {
+  content: ' ';
+  position: absolute;
+  top: 33px;
+  width: 0;
+  height: 0;
+  border: 9px solid transparent;
+  z-index: 2;
+}
+
+.timeline-item-container.left::after {
+  right: 28px;
+  border-left-color: var(--white);
+}
+
+.timeline-item-container.right::after {
+  left: 28px;
+  border-right-color: var(--white);
+}
+
+/* Conținutul (cardul) */
+.timeline-content {
+  padding: 1.5rem;
+  background: var(--white);
+  position: relative;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  border: 1px solid var(--accent-subtle);
+}
+
+/* === AICI E CORECTURA PENTRU ICONIȚE === */
 .timeline-icon-wrapper {
   position: absolute;
-  left: -24px;
-  top: 0;
+  z-index: 3; /* Peste tot */
+  top: 25px;
   width: 48px;
   height: 48px;
   background-color: var(--white);
@@ -221,23 +399,28 @@
   transition: all 0.3s ease;
 }
 
+/* Iconița stă LÂNGĂ linie, pe partea cardului */
+.timeline-item-container.left .timeline-icon-wrapper {
+  /* 48px (lățimea icon) + 40px (padding container) = 88px */
+  /* Îl punem la 65px de marginea containerului (50%) */
+  right: -65px; 
+}
+.timeline-item-container.right .timeline-icon-wrapper {
+  left: -65px;
+}
+
 .timeline-icon {
   color: var(--primary);
 }
+/* === Sfârșit corectură iconițe === */
 
-.timeline-item:hover .timeline-icon-wrapper {
-  border-color: var(--primary);
-  background-color: var(--primary);
-}
-.timeline-item:hover .timeline-icon {
-  color: var(--white);
-}
-.timeline-item:hover .timeline-title {
-  color: var(--primary);
-}
 
-.timeline-content {
-  position: relative;
+/* Aliniere text în carduri */
+.timeline-item-container.left .timeline-content {
+  text-align: right;
+}
+.timeline-item-container.right .timeline-content {
+  text-align: left;
 }
 
 .timeline-year {
@@ -247,7 +430,6 @@
   margin-bottom: 0.25rem;
   display: block;
 }
-
 .timeline-title {
   color: var(--navy);
   font-size: 1.25rem;
@@ -255,29 +437,50 @@
   margin-bottom: 0.5rem;
   transition: color 0.3s ease;
 }
-
 .timeline-description {
   color: var(--dark-gray);
   font-size: 1rem;
   line-height: 1.6;
 }
 
-@media (max-width: 900px) {
-  .despre-section {
-    flex-direction: column;
-  }
-  
-  .despre-section-text {
-    flex-basis: 100%;
-  }
+/* Efect hover pe timeline */
+.timeline-item-container:hover .timeline-icon-wrapper {
+  border-color: var(--primary);
+  background-color: var(--primary);
+}
+.timeline-item-container:hover .timeline-icon {
+  color: var(--white);
+}
+.timeline-item-container:hover .timeline-title {
+  color: var(--primary);
+}
 
+
+/* === Responsive Design === */
+@media (max-width: 900px) {
+  .viziune-container {
+    flex-direction: column;
+    gap: 1.5rem;
+    bottom: 2rem;
+  }
   .despre-section-image-wrapper {
-    flex-basis: 100%;
     order: -1;
+    max-width: 300px; /* Imagine mai mică pe mobil */
+  }
+  .despre-section-text-card {
+    flex-basis: 100%;
   }
 
   .values-grid {
     grid-template-columns: 1fr;
+  }
+  
+  .testimonials-grid {
+    grid-template-columns: 1fr;
+  }
+  .testimonial-card:nth-child(3) {
+    max-width: 100%; /* Full width pe mobil */
+    margin-top: 0;
   }
 }
 
@@ -292,146 +495,50 @@
     font-size: 1.1rem;
   }
   
-  .values-section {
-    padding: 3rem 1.5rem;
+  /* Timeline responsive - mută totul pe stânga */
+  .timeline::after {
+    left: 24px;
+    z-index: 1;
   }
-}
-
-.testimonials-section {
-    padding: 4rem 0;
-    background: var(--white);
-}
-
-.testimonials-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-}
-
-.testimonial-card {
-    background: var(--light-gray);
-    border: 1px solid var(--accent-subtle);
-    padding: 2rem;
-    border-radius: 12px;
-    position: relative;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease;
-}
-
-.testimonial-card:hover {
-    background: #eaf8f7;
-    border-color: var(--primary);
-    transform: translateY(-3px);
-}
-
-.testimonial-quote {
-    font-size: 1.1rem;
-    color: var(--navy);
-    line-height: 1.6;
-    margin-bottom: 1.5rem;
-    position: relative;
-}
-
-.testimonial-quote::before {
-    content: "“";
-    position: absolute;
-    top: -10px;
-    left: -10px;
-    font-size: 3rem;
-    color: var(--primary);
-    line-height: 1;
-    opacity: 0.2;
-}
-
-.testimonial-author-info {
-    border-top: 1px solid var(--accent-subtle);
-    padding-top: 1rem;
-    font-size: 0.95rem;
-}
-
-.author-name {
-    font-weight: 600;
-    color: var(--navy);
-}
-
-.author-location {
-    color: var(--dark-gray);
-}
-
-.despre-section-text-card {
-  flex-basis: 55%;
-  background: var(--light-gray);
-  padding: 2.5rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
-}
-
-.despre-section-text-card h2 {
-  color: var(--navy);
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 1.5rem;
-}
-
-.despre-section-text-card p {
-  color: var(--dark-gray);
-  font-size: 1rem;
-  line-height: 1.8;
-  margin-bottom: 0;
+  
+  .timeline-item-container {
+    width: 100%;
+    padding-left: 70px; /* Spațiu pentru iconiță */
+    padding-right: 15px;
+    z-index: 2;
+  }
+  
+  .timeline-item-container.left,
+  .timeline-item-container.right {
+    left: 0%;
+  }
+  
+  /* Aliniem iconița la linia din stânga */
+  .timeline-item-container.left .timeline-icon-wrapper,
+  .timeline-item-container.right .timeline-icon-wrapper {
+    left: 0px; /* Aliniat la 0 */
+  }
+  
+  /* Săgețile cardurilor pe stânga */
+  .timeline-item-container.left::before,
+  .timeline-item-container.right::before {
+    left: 60px;
+    border-right-color: var(--accent-subtle);
+    border-left-color: transparent;
+  }
+  .timeline-item-container.left::after,
+  .timeline-item-container.right::after {
+    left: 58px;
+    border-right-color: var(--white);
+    border-left-color: transparent;
+  }
+  
+  .timeline-item-container.left .timeline-content,
+  .timeline-item-container.right .timeline-content {
+    text-align: left;
+  }
 }
 
 .hidden-anim {
   opacity: 0;
-}
-
-.hero-content-overlay {
-  position: absolute;
-  bottom: 4rem;
-  left: 0;
-  right: 0;
-  z-index: 3;
-  padding: 0 1.5rem;
-  animation-delay: 0.3s;
-}
-
-.viziune-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 3rem;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.despre-section-text-card.animate__fadeInLeft {
-  animation-delay: 0.5s;
-}
-.despre-section-image-wrapper.animate__fadeInRight {
-  animation-delay: 0.7s;
-}
-
-@media (max-width: 900px) {
-  .hero-content-overlay {
-    bottom: 2rem;
-  }
-  .viziune-container {
-    flex-direction: column;
-    gap: 2rem;
-  }
-}
-
-.viziune-section {
-  padding: 6rem 2rem;
-  background-color: var(--white);
-  position: relative;
-  z-index: 2;
-}
-
-.viziune-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 3rem;
-  max-width: 1200px;
-  margin: 0 auto;
 }

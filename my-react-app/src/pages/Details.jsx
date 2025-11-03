@@ -17,6 +17,7 @@ const Details = () => {
   const mapInstanceRef = useRef(null);
 
   const navigate = useNavigate();
+  
   const handleClick = () => {
     navigate("/contact");
   }
@@ -189,7 +190,7 @@ const Details = () => {
                   </div>
                   <div className="contact-buttons">
                     <button onClick={() => window.location.href = "tel:+40712345678"} className="contact-btn primary"><Phone size={18} /> Sună acum</button>
-                    <button onClick={handleClick} className="contact-btn secondary"><Mail size={18} /> Trimite email</button>
+                    <button onClick={handleClick} className="contact-btn secondary"><Mail size={18} />Trimite email</button>
                   </div>
                 </div>
               </div>

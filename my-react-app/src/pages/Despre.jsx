@@ -1,8 +1,10 @@
 import React from 'react';
 import './Despre.css';
+import 'animate.css';
 import { Briefcase, Building, Trophy, Target, TrendingUp } from 'lucide-react';
 import heroImage from '../assets/birou2.jpg';
 import lenus from "../assets/lenus.jpg";
+import { useInView } from 'react-intersection-observer';
 
 const milestones = [
   {
@@ -32,24 +34,39 @@ const milestones = [
 ];
 
 const testimonials = [
-        {
-            quote: "Serviciile East8 au depășit așteptările. Am obținut o vânzare rapidă la un preț pe care nu ne așteptam să-l atingem. Recomandăm cu încredere pentru excelența și profesionalismul de care au dat dovadă.",
-            author: "Andrei P., Investitor Imobiliar",
-            location: "Nordul Bucureștiului"
-        },
-        {
-            quote: "Transparența și cunoașterea pieței de către Elena Miu au fost esențiale. Am găsit proprietatea perfectă pentru birourile noastre, iar procesul a fost impecabil de la A la Z.",
-            author: "Maria S., CEO Tech Solutions",
-            location: "Zona Centrală"
-        },
-        {
-            quote: "Pentru mine, factorul decisiv a fost încrederea. East8 livrează nu doar tranzacții, ci și parteneriate pe termen lung. Servicii premium, rezultate pe măsură.",
-            author: "Alexandru V., Client Rezidențial",
-            location: "Băneasa"
-        }
-    ];
+    {
+        quote: "Serviciile East8 au depășit așteptările. Am obținut o vânzare rapidă la un preț pe care nu ne așteptam să-l atingem. Recomandăm cu încredere pentru excelența și profesionalismul de care au dat dovadă.",
+        author: "Andrei P., Investitor Imobiliar",
+        location: "Nordul Bucureștiului"
+    },
+    {
+        quote: "Transparența și cunoașterea pieței de către Elena Miu au fost esențiale. Am găsit proprietatea perfectă pentru birourile noastre, iar procesul a fost impecabil de la A la Z.",
+        author: "Maria S., CEO Tech Solutions",
+        location: "Zona Centrală"
+    },
+    {
+        quote: "Pentru mine, factorul decisiv a fost încrederea. East8 livrează nu doar tranzacții, ci și parteneriate pe termen lung. Servicii premium, rezultate pe măsură.",
+        author: "Alexandru V., Client Rezidențial",
+        location: "Băneasa"
+    }
+];
 
-const Despre = () => {
+const Despre = () => { 
+  const { ref: valoriRef, inView: valoriInView } = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  });
+
+  const { ref: testimonialsRef, inView: testimonialsInView } = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  });
+
+  const { ref: istoricRef, inView: istoricInView } = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  });
+
   return (
     <div className="despre-page-container">
       <div className="despre-hero" style={{ backgroundImage: `url(${heroImage})` }}>
@@ -60,25 +77,25 @@ const Despre = () => {
             Expertiză și Integritate în Imobiliarele Premium
           </p>
         </div>
+      </div> 
+
+    <section className="viziune-section">
+      <div className="viziune-container">
+        <div className="despre-section-text-card">
+          <h2>Viziunea Noastră</h2>
+          <p>Fondată în 2018, Premium East8...</p>
+        </div>
+        <div className="despre-section-image-wrapper">
+          <img src={lenus} alt="Echipa East8" className="despre-section-image" />
+        </div>
       </div>
+    </section>
 
       <div className="container">
-        <div className="despre-section">
-          <div className="despre-section-text">
-            <h2>Viziunea Noastră</h2>
-            <p>
-              Fondată în 2018, Premium East8 a apărut ca răspuns la cererea pieței pentru o agenție de consultanță de nișă, dedicată exclusiv segmentului premium. Ne-am construit reputația pe o fundație de profesionalism absolut, transparență și o înțelegere profundă a investițiilor imobiliare de prestigiu.
-            </p>
-            <p>
-              Nu suntem doar intermediari, ci parteneri strategici. Misiunea noastră este să oferim consultanță bazată pe date precise și o analiză aprofundată a pieței, asigurând că fiecare tranzacție - fie că este vorba de clădiri de birouri de clasă A sau proprietăți rezidențiale de lux - generează valoare maximă pentru clienții noștri.
-            </p>
-          </div>
-          <div className="despre-section-image-wrapper">
-            <img src={lenus} alt="Echipa East8" className="despre-section-image" />
-          </div>
-        </div>
-
-        <div className="despre-section values-section">
+        <div 
+          className={`despre-section values-section ${valoriInView ? 'animate__animated animate__fadeInUp' : 'hidden-anim'}`}
+          ref={valoriRef}
+        >
           <h2 className="section-title">Valorile Noastre Fundamentale</h2>
           <div className="values-grid">
             <div className="value-card">
@@ -105,22 +122,28 @@ const Despre = () => {
           </div>
         </div>
 
-        <div className="despre-section testimonials-section">
+        <div 
+          className={`despre-section testimonials-section ${testimonialsInView ? 'animate__animated animate__fadeIn' : 'hidden-anim'}`}
+          ref={testimonialsRef}
+        >
           <h2 className="section-title">Ce Spun Clienții Noștri</h2>
-              <div className="testimonials-grid">
-                  {testimonials.map((item, index) => (
-                      <div className="testimonial-card" key={index}>
-                          <p className="testimonial-quote">"{item.quote}"</p>
-                          <div className="testimonial-author-info">
-                              <span className="author-name">{item.author}</span>
-                              <span className="author-location"> - {item.location}</span>
-                          </div>
-                      </div>
-                  ))}
+          <div className="testimonials-grid">
+            {testimonials.map((item, index) => (
+              <div className="testimonial-card" key={index}>
+                <p className="testimonial-quote">"{item.quote}"</p>
+                <div className="testimonial-author-info">
+                  <span className="author-name">{item.author}</span>
+                  <span className="author-location"> - {item.location}</span>
+                </div>
               </div>
+            ))}
           </div>
+        </div>
 
-        <div className="despre-section milestones-section">
+        <div 
+          className={`despre-section milestones-section ${istoricInView ? 'animate__animated animate__fadeIn' : 'hidden-anim'}`}
+          ref={istoricRef}
+        >
           <h2 className="section-title">Istoric Tranzacții Relevante</h2>
           <div className="timeline">
             {milestones.map((item, index) => (
@@ -137,8 +160,9 @@ const Despre = () => {
             ))}
           </div>
         </div>
-      </div>
-    </div>
+
+      </div> 
+    </div> 
   );
 };
 

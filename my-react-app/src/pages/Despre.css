@@ -16,7 +16,7 @@
 
 .despre-hero {
   position: relative;
-  height: 400px;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -79,9 +79,11 @@
   background-color: var(--primary);
 }
 
+ /*
 .despre-section:first-of-type {
   padding-top: 5rem;
-}
+} 
+*/
 
 .despre-section {
   display: flex;
@@ -354,4 +356,82 @@
 
 .author-location {
     color: var(--dark-gray);
+}
+
+.despre-section-text-card {
+  flex-basis: 55%;
+  background: var(--light-gray);
+  padding: 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
+}
+
+.despre-section-text-card h2 {
+  color: var(--navy);
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+.despre-section-text-card p {
+  color: var(--dark-gray);
+  font-size: 1rem;
+  line-height: 1.8;
+  margin-bottom: 0;
+}
+
+.hidden-anim {
+  opacity: 0;
+}
+
+.hero-content-overlay {
+  position: absolute;
+  bottom: 4rem;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  padding: 0 1.5rem;
+  animation-delay: 0.3s;
+}
+
+.viziune-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 3rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.despre-section-text-card.animate__fadeInLeft {
+  animation-delay: 0.5s;
+}
+.despre-section-image-wrapper.animate__fadeInRight {
+  animation-delay: 0.7s;
+}
+
+@media (max-width: 900px) {
+  .hero-content-overlay {
+    bottom: 2rem;
+  }
+  .viziune-container {
+    flex-direction: column;
+    gap: 2rem;
+  }
+}
+
+.viziune-section {
+  padding: 6rem 2rem;
+  background-color: var(--white);
+  position: relative;
+  z-index: 2;
+}
+
+.viziune-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 3rem;
+  max-width: 1200px;
+  margin: 0 auto;
 }

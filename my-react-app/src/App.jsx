@@ -1,4 +1,6 @@
+import React, { useState } from 'react';
 import { Routes, Route } from "react-router-dom";
+
 import Homepage from './pages/Homepage.jsx'
 import Header from './components/Header.jsx'
 import Footer from './components/Footer.jsx'
@@ -11,24 +13,30 @@ import Despre from "./pages/Despre.jsx";
 import "./App.css";
 
 export default function App() {
+  const [darkMode, setDarkMode] = useState(false);
+
+  const toggleTheme = () => {
+    setDarkMode((prev) => !prev);
+  };
+
+
   return (
-    <> 
-      <div className="app-layout">
-        <Header />
+    <>
+      <div className={`app-layout ${darkMode ? "dark-theme" : ""}`}>
+        <Header darkMode={darkMode} toggleTheme={toggleTheme} />
         <ScrollToTop />
         <main>
           <Routes>
-            <Route path="/" element = {<Homepage />} />
-            <Route path="properties" element = {<Properties />} /> 
-            <Route path="properties/:id" element = {<Details />} />
-            <Route path="contact" element = {<Contact />} />
-            <Route path="despre" element = {<Despre />} />
-          </Routes>          
-        </main>      
-        
+            <Route path="/" element={<Homepage />} />
+            <Route path="properties" element={<Properties />} />
+            <Route path="properties/:id" element={<Details />} />
+            <Route path="contact" element={<Contact />} />
+            <Route path="despre" element={<Despre />} />
+          </Routes>
+        </main>
+
         <Footer />
       </div>
-
     </>
   );
 }

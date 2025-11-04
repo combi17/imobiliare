@@ -1,4 +1,4 @@
-/* Folosim variabilele tale de culoare definite în alte fișiere */
+
 :root {
   --primary: #1da397;
   --navy: #2c3e50;
@@ -11,22 +11,23 @@
 .despre-page-container {
   min-height: 100vh;
   background: var(--white);
-  padding-top: 80px; /* Doar spațiul pentru header-ul principal */
+  padding-top: 80px;
 }
 
-/* === MODIFICARE 1: Secțiunea Hero === */
 .despre-hero {
   position: relative;
   height: 100vh;
   display: flex;
-  flex-direction: column; /* Aliniem titlul (sus) și cardurile (jos) */
-  justify-content: flex-start; /* Aliniem titlul sus */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   text-align: center;
   color: var(--white);
   background-size: cover;
   background-position: center 60%;
   margin-top: -80px;
-  padding-top: 10rem; /* Spațiu de sus pentru titlu */
+  padding: 0 1.5rem;
+  gap: 4rem; 
   box-sizing: border-box;
 }
 
@@ -37,12 +38,12 @@
   width: 100%;
   height: 100%;
   background: linear-gradient(0deg, rgba(44, 62, 80, 0.7), rgba(44, 62, 80, 0.4));
-  z-index: 1; /* Stă sub conținut */
+  z-index: 1;
 }
 
 .despre-hero .container {
   position: relative;
-  z-index: 2; /* Titlul stă peste overlay */
+  z-index: 2;
   max-width: 800px;
 }
 
@@ -59,14 +60,12 @@
   opacity: 0.9;
 }
 
-/* Container Viziune (josul paginii) */
 .hero-content-overlay {
-  position: absolute;
-  bottom: 4rem; /* Spațiu față de baza ecranului */
-  left: 0;
-  right: 0;
-  z-index: 3; /* Peste overlay */
+  position: relative;
+  z-index: 3;
   padding: 0 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .viziune-container {
@@ -74,26 +73,22 @@
   justify-content: space-between;
   align-items: center;
   gap: 3rem;
-  max-width: 1200px; /* Aliniat cu .container-ul mare */
+  max-width: 1200px;
   margin: 0 auto;
 }
 
-/* Card Viziune cu fundal transparent */
 .despre-section-text-card {
   flex-basis: 55%;
-  /* Efect de sticlă (glassmorphism) */
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  
   padding: 2.5rem;
   border-radius: 12px;
   box-shadow: 0 4px 25px rgba(0, 0, 0, 0.1);
   text-align: left;
 }
 
-/* Textul de pe cardul Viziune trebuie să fie alb/lizibil */
 .despre-section-text-card h2 {
   color: var(--white);
   font-size: 2rem;
@@ -109,7 +104,6 @@
   opacity: 0.9;
 }
 
-/* Imaginea agentului */
 .despre-section-image-wrapper {
   flex-basis: 40%;
   display: flex;
@@ -123,11 +117,10 @@
   height: auto;
   border-radius: 12px;
   object-fit: cover;
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2); /* Umbră mai pronunțată */
-  border: 1px solid rgba(255, 255, 255, 0.1); /* Border subtil */
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Delay-uri animații Hero */
 .despre-section-text-card.animate__fadeInLeft {
   animation-delay: 0.5s;
 }
@@ -135,10 +128,8 @@
   animation-delay: 0.7s;
 }
 
-
-/* === Stiluri Generale Secțiuni (sub hero) === */
 .despre-section {
-  padding: 5rem 0; /* Am mărit padding-ul general */
+  padding: 5rem 0;
 }
 
 .section-title {
@@ -160,98 +151,29 @@
   background-color: var(--primary);
 }
 
-/* === MODIFICARE 2: Secțiunea Valori (Carduri) === */
-.values-section {
-  flex-direction: column;
-  background: var(--light-gray);
-  padding: 5rem 2rem;
-  border-radius: 20px;
-}
-
-.values-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
-  width: 100%;
-}
-
-.value-card {
-  background: var(--white);
-  padding: 2rem;
-  border-radius: 12px;
-  border: 1px solid var(--accent-subtle);
-  text-align: left;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  opacity: 0; /* Inițial ascuns pentru animația individuală */
-}
-
-/* Animație eșalonată (stagger) */
-.value-card.animate__fadeInUp:nth-child(1) {
-  animation-delay: 0.2s;
-}
-.value-card.animate__fadeInUp:nth-child(2) {
-  animation-delay: 0.4s;
-}
-.value-card.animate__fadeInUp:nth-child(3) {
-  animation-delay: 0.6s;
-}
-
-.value-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
-}
-.value-icon {
-  width: 48px;
-  height: 48px;
-  color: var(--primary);
-  background: rgba(29, 163, 151, 0.1);
-  padding: 10px;
-  border-radius: 50%;
-  margin-bottom: 1rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-.value-card h3 {
-  color: var(--navy);
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-}
-.value-card p {
-  color: var(--dark-gray);
-  line-height: 1.6;
-}
-
-/* === MODIFICARE 3: Secțiunea Testimonials === */
 .testimonials-section {
   padding: 5rem 0;
+  background: var(--light-gray);
 }
-
 .testimonials-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr; /* Două coloane */
+  grid-template-columns: 1fr 1fr;
   gap: 2rem;
 }
-
 .testimonial-card {
   background: var(--white);
   padding: 2rem;
   border-radius: 12px;
   border: 1px solid var(--accent-subtle);
   box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-  text-align: center; /* Centram conținutul */
+  text-align: center;
 }
-
-/* Al treilea card, centrat */
 .testimonial-card:nth-child(3) {
-  grid-column: 1 / -1; /* Ocupă ambele coloane de grid */
-  max-width: 50%; /* Dar are lățime de 50% */
-  margin: 1rem auto 0; /* Și se centrează automat */
-  justify-self: center; /* Centrare extra */
+  grid-column: 1 / -1;
+  max-width: 50%;
+  margin: 1rem auto 0;
+  justify-self: center;
 }
-
-/* Avatarul rotund */
 .testimonial-avatar {
   width: 60px;
   height: 60px;
@@ -263,9 +185,8 @@
   justify-content: center;
   font-size: 1.5rem;
   font-weight: 600;
-  margin: 0 auto 1.5rem; /* Centrat deasupra textului */
+  margin: 0 auto 1.5rem;
 }
-
 .testimonial-quote {
   color: var(--dark-gray);
   font-style: italic;
@@ -287,8 +208,6 @@
   font-size: 0.9rem;
 }
 
-
-/* === MODIFICARE 4: Secțiunea Istoric (Timeline) Rescrisă === */
 .milestones-section {
   display: block;
   padding-top: 5rem;
@@ -300,7 +219,6 @@
   margin: 2rem auto 0;
 }
 
-/* Linia centrală */
 .timeline::after {
   content: '';
   position: absolute;
@@ -310,21 +228,19 @@
   bottom: 0;
   left: 50%;
   margin-left: -1.5px;
-  z-index: 1; /* Linia e în spate */
+  z-index: 1;
 }
 
-/* Container-ul pentru item (stânga/dreapta) */
 .timeline-item-container {
   padding: 10px 40px;
   position: relative;
   background-color: inherit;
   width: 50%;
-  opacity: 0; /* Ascuns pentru animație */
+  opacity: 0;
   box-sizing: border-box;
-  z-index: 2; /* Item-ul e în față */
+  z-index: 2;
 }
 
-/* Poziționare stânga/dreapta */
 .timeline-item-container.left {
   left: 0;
 }
@@ -332,7 +248,6 @@
   left: 50%;
 }
 
-/* Săgețile cardurilor */
 .timeline-item-container::before {
   content: ' ';
   position: absolute;
@@ -373,7 +288,6 @@
   border-right-color: var(--white);
 }
 
-/* Conținutul (cardul) */
 .timeline-content {
   padding: 1.5rem;
   background: var(--white);
@@ -383,10 +297,9 @@
   border: 1px solid var(--accent-subtle);
 }
 
-/* === AICI E CORECTURA PENTRU ICONIȚE === */
 .timeline-icon-wrapper {
   position: absolute;
-  z-index: 3; /* Peste tot */
+  z-index: 3;
   top: 25px;
   width: 48px;
   height: 48px;
@@ -399,23 +312,17 @@
   transition: all 0.3s ease;
 }
 
-/* Iconița stă LÂNGĂ linie, pe partea cardului */
 .timeline-item-container.left .timeline-icon-wrapper {
-  /* 48px (lățimea icon) + 40px (padding container) = 88px */
-  /* Îl punem la 65px de marginea containerului (50%) */
-  right: -65px; 
+  right: -24px;
 }
 .timeline-item-container.right .timeline-icon-wrapper {
-  left: -65px;
+  left: -24px;
 }
 
 .timeline-icon {
   color: var(--primary);
 }
-/* === Sfârșit corectură iconițe === */
 
-
-/* Aliniere text în carduri */
 .timeline-item-container.left .timeline-content {
   text-align: right;
 }
@@ -443,7 +350,6 @@
   line-height: 1.6;
 }
 
-/* Efect hover pe timeline */
 .timeline-item-container:hover .timeline-icon-wrapper {
   border-color: var(--primary);
   background-color: var(--primary);
@@ -456,31 +362,180 @@
 }
 
 
-/* === Responsive Design === */
+.tranzactii-section {
+  padding: 5rem 0;
+}
+
+.tranzactii-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+.tranzactie-card {
+  position: relative;
+  height: 350px;
+  border-radius: 12px;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  color: var(--white);
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.tranzactie-card:hover {
+  transform: scale(1.03);
+}
+
+.tranzactie-card-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(0deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.1) 100%);
+  z-index: 1;
+}
+
+.tranzactie-card-content {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  right: 1.5rem;
+  z-index: 2;
+}
+
+.tranzactie-card-content h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.tranzactie-card-content p {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+  background: var(--white);
+  border-radius: 12px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  position: relative;
+  animation: slideInUp 0.4s ease;
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: var(--accent-subtle);
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--dark-gray);
+  z-index: 10;
+}
+
+.modal-image {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 12px 12px 0 0;
+}
+
+.modal-body {
+  padding: 2rem;
+}
+
+.modal-title {
+  font-size: 1.8rem;
+  color: var(--navy);
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.modal-location {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--dark-gray);
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.modal-description {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--dark-gray);
+  margin-bottom: 2rem;
+}
+
+.modal-cta-btn {
+  background: var(--primary);
+  color: var(--white);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.modal-cta-btn:hover {
+  background: #178a7f; 
+}
+
 @media (max-width: 900px) {
   .viziune-container {
     flex-direction: column;
     gap: 1.5rem;
-    bottom: 2rem;
   }
   .despre-section-image-wrapper {
     order: -1;
-    max-width: 300px; /* Imagine mai mică pe mobil */
+    max-width: 300px;
   }
   .despre-section-text-card {
     flex-basis: 100%;
   }
 
-  .values-grid {
-    grid-template-columns: 1fr;
-  }
-  
   .testimonials-grid {
     grid-template-columns: 1fr;
   }
   .testimonial-card:nth-child(3) {
-    max-width: 100%; /* Full width pe mobil */
+    max-width: 100%;
     margin-top: 0;
+  }
+  
+  .tranzactii-grid {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -495,7 +550,6 @@
     font-size: 1.1rem;
   }
   
-  /* Timeline responsive - mută totul pe stânga */
   .timeline::after {
     left: 24px;
     z-index: 1;
@@ -503,7 +557,7 @@
   
   .timeline-item-container {
     width: 100%;
-    padding-left: 70px; /* Spațiu pentru iconiță */
+    padding-left: 70px;
     padding-right: 15px;
     z-index: 2;
   }
@@ -513,13 +567,11 @@
     left: 0%;
   }
   
-  /* Aliniem iconița la linia din stânga */
   .timeline-item-container.left .timeline-icon-wrapper,
   .timeline-item-container.right .timeline-icon-wrapper {
-    left: 0px; /* Aliniat la 0 */
+    left: 0px;
   }
-  
-  /* Săgețile cardurilor pe stânga */
+
   .timeline-item-container.left::before,
   .timeline-item-container.right::before {
     left: 60px;
@@ -537,6 +589,25 @@
   .timeline-item-container.right .timeline-content {
     text-align: left;
   }
+  
+  .modal-content {
+    width: 95%;
+  }
+  .modal-body {
+    padding: 1.5rem;
+  }
+  .modal-title {
+    font-size: 1.5rem;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes slideInUp {
+  from { transform: translateY(50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
 .hidden-anim {

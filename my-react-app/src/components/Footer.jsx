@@ -11,19 +11,19 @@ const Footer = () => {
             </div>
             <div className="footer-section">
                 <h3>Servicii</h3>
-                <a href="#">Vânzare Apartamente</a>
-                <a href="#">Închiriere Case</a>
-                <a href="#">Consultanță Investiții</a>
-                <a href="#">Evaluări Proprietăți</a>
-                <a href="#">Management Proprietăți</a>
+                <a>Vânzare Apartamente</a>
+                <a>Închiriere Case</a>
+                <a>Consultanță Investiții</a>
+                <a>Evaluări Proprietăți</a>
+                <a>Management Proprietăți</a>
             </div>
             <div className="footer-section">
                 <h3>Zone Deservite</h3>
-                <a href="#">Sectorul 1</a>
-                <a href="#">Sectorul 2</a>
-                <a href="#">Herastrau</a>
-                <a href="#">Primaverii</a>
-                <a href="#">Floreasca</a>
+                <a>Sectorul 1</a>
+                <a>Sectorul 2</a>
+                <a>Herastrau</a>
+                <a>Primaverii</a>
+                <a>Floreasca</a>
             </div>
             <div className="footer-section">
                 <h3>Contact</h3>
@@ -34,7 +34,7 @@ const Footer = () => {
             </div>
         </div>
         <div className="footer-bottom">
-            <p>&copy; 2024 East8.ro - Toate drepturile rezervate. | Politica de Confidențialitate | Termeni și Condiții</p>
+            <p>&copy; 2024 East8.ro - Toate drepturile rezervate. | <a>Prelucrarea Datelor cu Caracter Personal</a> </p>
         </div>
     </footer>     
     </>

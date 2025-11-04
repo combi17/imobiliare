@@ -1,23 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Despre.css';
 import 'animate.css';
-import { Briefcase, Building, Trophy, Target, TrendingUp } from 'lucide-react';
+import { Briefcase, Building, Trophy, Target, TrendingUp, X, MapPin, Building2, Warehouse } from 'lucide-react';
 import heroImage from '../assets/birou2.jpg';
 import lenus from "../assets/lenus.jpg";
 import { useInView } from 'react-intersection-observer';
 
 const milestones = [
   {
-    year: '2023',
-    title: 'Tranzacție Record în Sectorul 1',
-    description: 'Intermedierea cu succes a vânzării unei clădiri de birouri de 10.000 mp, stabilind un nou record pe piața din nordul capitalei.',
-    icon: <Trophy size={20} />
-  },
-  {
-    year: '2022',
-    title: 'Extinderea Echipei și Parteneriate Strategice',
-    description: 'Ne-am dublat echipa de consultanți seniori și am format alianțe cheie cu fonduri de investiții internaționale.',
-    icon: <Briefcase size={20} />
+    year: '2018',
+    title: 'Fondarea Premium East8',
+    description: 'East8 a fost fondată cu viziunea de a redefini consultanța imobiliară de lux în București, punând accent pe etică și expertiză.',
+    icon: <Building size={20} />
   },
   {
     year: '2020',
@@ -26,35 +20,77 @@ const milestones = [
     icon: <TrendingUp size={20} />
   },
   {
-    year: '2018',
-    title: 'Fondarea Premium East8',
-    description: 'East8 a fost fondată cu viziunea de a redefini consultanța imobiliară de lux în București, punând accent pe etică și expertiză.',
-    icon: <Building size={20} />
+    year: '2022',
+    title: 'Extinderea Echipei și Parteneriate',
+    description: 'Ne-am dublat echipa de consultanți seniori și am format alianțe cheie cu fonduri de investiții internaționale.',
+    icon: <Briefcase size={20} />
+  },
+  {
+    year: '2023',
+    title: 'Tranzacție Record în Sectorul 1',
+    description: 'Intermedierea cu succes a vânzării unei clădiri de birouri de 10.000 mp, stabilind un nou record pe piața din nordul capitalei.',
+    icon: <Trophy size={20} />
   }
 ];
 
 const testimonials = [
     {
-        quote: "Serviciile East8 au depășit așteptările. Am obținut o vânzare rapidă la un preț pe care nu ne așteptam să-l atingem. Recomandăm cu încredere pentru excelența și profesionalismul de care au dat dovadă.",
+        quote: "Serviciile East8 au depășit așteptările. Am obținut o vânzare rapidă la un preț pe care nu ne așteptam să-l atingem. Recomandăm cu încredere.",
         author: "Andrei P.",
         location: "Investitor Imobiliar, Nordul Bucureștiului"
     },
     {
-        quote: "Transparența și cunoașterea pieței de către Elena Miu au fost esențiale. Am găsit proprietatea perfectă pentru birourile noastre, iar procesul a fost impecabil de la A la Z.",
+        quote: "Transparența și cunoașterea pieței de către Elena Miu au fost esențiale. Am găsit proprietatea perfectă pentru birourile noastre.",
         author: "Maria S.",
         location: "CEO Tech Solutions, Zona Centrală"
     },
     {
-        quote: "Pentru mine, factorul decisiv a fost încrederea. East8 livrează nu doar tranzacții, ci și parteneriate pe termen lung. Servicii premium, rezultate pe măsură.",
+        quote: "Pentru mine, factorul decisiv a fost încrederea. East8 livrează nu doar tranzacții, ci și parteneriate pe termen lung.",
         author: "Alex V.",
         location: "Client Rezidențial, Băneasa"
     }
 ];
 
+import birouImg from '../assets/birou.jpg';
+import apartImg from '../assets/apart1.jpg';
+import houseImg from '../assets/house1.jpg';
+import birou3Img from '../assets/birou3.jpg';
+
+const tranzactii = [
+  {
+    id: 1,
+    title: 'Clădire Birouri Clasa A',
+    location: 'Pipera, București',
+    description: 'Tranzacție de închiriere pe 10 ani pentru 15.000 mp de spații de birouri moderne, consolidând polul de business din nordul capitalei.',
+    image: birouImg
+  },
+  {
+    id: 2,
+    title: 'Portofoliu Rezidențial',
+    location: 'Băneasa, București',
+    description: 'Vânzare a unui pachet de 50 de apartamente de lux într-un complex rezidențial premium, destinată unui fond de investiții internațional.',
+    image: apartImg
+  },
+  {
+    id: 3,
+    title: 'Vilă Monument Istoric',
+    location: 'Zona Aviatorilor, București',
+    description: 'Consultanță și intermediere în vânzarea unei proprietăți unice, o vilă monument istoric ce necesită restaurare, preluată de un colecționar privat.',
+    image: houseImg
+  },
+  {
+    id: 4,
+    title: 'Spațiu Industrial / Logistic',
+    location: 'A1, km 23',
+    description: 'Închiriere a 20.000 mp de spațiu de depozitare și logistică de ultimă generație pentru o companie de e-commerce de top.',
+    image: birou3Img
+  }
+];
+
 const TimelineItem = ({ item, index }) => {
   const { ref, inView } = useInView({
     triggerOnce: true,
-    threshold: 0.4, 
+    threshold: 0.2,
   });
 
   const alignment = index % 2 === 0 ? 'left' : 'right';
@@ -77,25 +113,62 @@ const TimelineItem = ({ item, index }) => {
   );
 };
 
+const TranzactieModal = ({ data, onClose }) => {
+  if (!data) return null;
+
+  return (
+    <div className="modal-backdrop" onClick={onClose}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <button className="modal-close-btn" onClick={onClose}>
+          <X size={24} />
+        </button>
+        <img src={data.image} alt={data.title} className="modal-image" />
+        <div className="modal-body">
+          <h2 className="modal-title">{data.title}</h2>
+          <div className="modal-location">
+            <MapPin size={16} /> {data.location}
+          </div>
+          <p className="modal-description">{data.description}</p>
+          <button className="modal-cta-btn">Vezi Detalii</button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Despre = () => { 
-  const { ref: valoriRef, inView: valoriInView } = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  });
+  const [modalData, setModalData] = useState(null);
 
   const { ref: testimonialsRef, inView: testimonialsInView } = useInView({
     triggerOnce: true,
     threshold: 0.1,
   });
+  
+  const { ref: tranzactiiRef, inView: tranzactiiInView } = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  });
 
   const getInitials = (name) => {
-    return name.split(' ').map(n => n[0]).join('');
+    if (!name) return '';
+    const names = name.split(' ');
+    if (names.length === 1) return names[0][0];
+    return names[0][0] + names[names.length - 1][0];
   };
+
+  const handleOpenModal = (tranzactie) => {
+    setModalData(tranzactie);
+  };
+  const handleCloseModal = () => {
+    setModalData(null);
+  };
+
 
   return (
     <div className="despre-page-container">
       <div className="despre-hero" style={{ backgroundImage: `url(${heroImage})` }}>
         <div className="despre-hero-overlay"></div>
+        
         <div className="container">
           <h1 className="despre-title animate__animated animate__fadeInDown">Despre East8</h1>
           <p className="despre-subtitle animate__animated animate__fadeInDown animate__delay-1s">
@@ -121,42 +194,17 @@ const Despre = () => {
           </div>
         </div>
       </div> 
-      
+
       <div className="container">
-        <div 
-          className="despre-section values-section"
-          ref={valoriRef}
-        >
-          <h2 className="section-title">Valorile Noastre Fundamentale</h2>
-          <div className="values-grid">
-
-            <div className={`value-card ${valoriInView ? 'animate__animated animate__fadeInUp' : 'hidden-anim'}`}>
-              <div className="value-icon">
-                <Trophy size={28} />
-              </div>
-              <h3>Excelență</h3>
-              <p>Urmărim cele mai înalte standarde în tot ceea ce facem, de la analiza pieței la negocierea finală.</p>
-            </div>
-            
-            <div className={`value-card ${valoriInView ? 'animate__animated animate__fadeInUp' : 'hidden-anim'}`}>
-              <div className="value-icon">
-                <Briefcase size={28} />
-              </div>
-              <h3>Profesionalism</h3>
-              <p>Echipa noastră de experți oferă soluții personalizate, bazate pe etică și confidențialitate totală.</p>
-            </div>
-            
-            <div className={`value-card ${valoriInView ? 'animate__animated animate__fadeInUp' : 'hidden-anim'}`}>
-              <div className="value-icon">
-                <Target size={28} />
-              </div>
-              <h3>Rezultate</h3>
-              <p>Istoricul nostru de tranzacții de prestigiu demonstrează angajamentul nostru pentru succesul clienților.</p>
-            </div>
-
+        <div className="despre-section milestones-section">
+          <h2 className="section-title">Cum ne-am dezvoltat</h2>
+          <div className="timeline">
+            {milestones.map((item, index) => (
+              <TimelineItem item={item} index={index} key={index} />
+            ))}
           </div>
         </div>
-
+        
         <div 
           className={`despre-section testimonials-section ${testimonialsInView ? 'animate__animated animate__fadeIn' : 'hidden-anim'}`}
           ref={testimonialsRef}
@@ -178,17 +226,31 @@ const Despre = () => {
           </div>
         </div>
 
-        <div className="despre-section milestones-section">
-          <h2 className="section-title">Istoric Tranzacții Relevante</h2>
-
-          <div className="timeline">
-            {milestones.map((item, index) => (
-              <TimelineItem item={item} index={index} key={index} />
+        <div 
+          className="despre-section tranzactii-section"
+          ref={tranzactiiRef}
+        >
+          <h2 className="section-title">Cele Mai Importante Tranzacții</h2>
+          <div className={`tranzactii-grid ${tranzactiiInView ? 'animate__animated animate__fadeInUp' : 'hidden-anim'}`}>
+            {tranzactii.map((item) => (
+              <div 
+                className="tranzactie-card" 
+                key={item.id} 
+                style={{ backgroundImage: `url(${item.image})` }}
+                onClick={() => handleOpenModal(item)}
+              >
+                <div className="tranzactie-card-overlay"></div>
+                <div className="tranzactie-card-content">
+                  <h3>{item.title}</h3>
+                  <p><MapPin size={14} /> {item.location}</p>
+                </div>
+              </div>
             ))}
           </div>
         </div>
-
+        
       </div> 
+      {modalData && <TranzactieModal data={modalData} onClose={handleCloseModal} />}
     </div> 
   );
 };

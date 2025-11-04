@@ -1,8 +1,7 @@
 import React from 'react'
 import { Link } from "react-router-dom";
-//import { useNavigate } from 'react-router-dom';
 
-const Header = () => {
+const Header = ({ darkMode, toggleTheme }) => {
   return (
     <>
       <header>
@@ -14,7 +13,16 @@ const Header = () => {
             <li><Link to="/despre">Despre noi</Link></li>
             <li><Link to="/contact">Contact</Link></li>
           </ul>
-          <Link to="/contact" className="cta-nav">Obține Evaluare</Link>
+          
+          <div className="nav-actions">
+          <button
+            className="theme-btn"
+            onClick={toggleTheme}
+            title="Schimbă tema"
+          >
+            {darkMode ? "☀️" : "🌙"}
+          </button>
+        </div>
         </nav>
       </header>
     </>

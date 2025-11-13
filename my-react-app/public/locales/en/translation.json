@@ -1,0 +1,21 @@
+{
+  "header": {
+    "acasa": "Home",
+    "proprietati": "Properties",
+    "despre": "About Us",
+    "contact": "Contact"
+  },
+  "despre": {
+    "hero": {
+      "titlu": "About East8",
+      "subtitlu": "Expertise and Integrity in Premium Real Estate"
+    },
+    "viziune": {
+      "titlu": "Our Vision",
+      "text": "Founded in 2018, Premium East8 emerged in response to market demand for a niche consulting agency dedicated exclusively to the premium segment. We have built our reputation on a foundation of absolute professionalism, transparency, and a deep understanding of prestigious real estate investments."
+    },
+    "timeline": {
+      "titlu": "How We've Grown"
+    }
+  }
+}

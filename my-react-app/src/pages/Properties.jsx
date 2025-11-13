@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { Filter, MapPin, Home, Bath, Maximize, Heart, Eye, Map, List, ChevronDown } from 'lucide-react';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
+import { Filter, MapPin, Home, Bath, Maximize, Heart, Eye, Map, List, ChevronDown, Mail } from 'lucide-react';
+import mapboxgl from 'mapbox-gl';
+import 'mapbox-gl/dist/mapbox-gl.css';
 import './Properties.css';
 import supabase from "../supabaseClient"
+
+mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
 const PropertyCard = ({ property }) => {
   return (
@@ -56,6 +58,27 @@ const PropertyCard = ({ property }) => {
     </div>
     </Link>
   );
+};
+
+const ContactBanner = () => {
+    return (
+        <div className="contact-banner">
+            <div className="contact-banner-content">
+                <div className="contact-banner-left">
+                    <h3 className="contact-banner-title">Nu ai găsit proprietatea perfectă?</h3>
+                    <p className="contact-banner-subtitle">
+                        Echipa noastră te poate ajuta să găsești exact ce cauți. Contactează-ne și îți vom oferi soluții personalizate.
+                    </p>
+                </div>
+                <div className="contact-banner-right">
+                    <Link to="/contact" className="contact-button">
+                        <Mail size={20} />
+                        Contactează-ne
+                    </Link>
+                </div>
+            </div>
+        </div>
+    );
 };
 
 const Properties = () => {
@@ -117,28 +140,99 @@ const Properties = () => {
     setFilters(prev => ({ ...prev, [key]: value }));
   };
 
-  // harta leaflet
-  useEffect(() => {
-    if (document.getElementById('map') && !document.getElementById('map')._leaflet_id) {
-      const map = L.map('map').setView([44.4268, 26.1025], 13);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
-      }).addTo(map);
+  // harta leaflet SCHIMBATA IN MAPBOX
+   useEffect(() => {
+  if (viewMode !== 'list' && properties.length > 0) {
+    const mapElement = document.getElementById('map');
+    
+    if (mapElement && !mapElement._mapboxInitialized) {
+      mapElement._mapboxInitialized = true;
+      
+      const map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/streets-v12',
+        center: [26.1025, 44.4268],
+        zoom: 12,
+        pitch: 0,
+      });
+
+      map.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
       properties.forEach(property => {
-        L.marker([property.lat, property.lng]).addTo(map)
-          .bindPopup(`<b>${property.name}</b><br>€${property.price}`);
+        const popupContent = document.createElement('div');
+        popupContent.className = 'map-popup-content';
+        popupContent.style.cursor = 'pointer';
+        popupContent.innerHTML = `
+          <img 
+            src="${property.image_urls[0]}" 
+            alt="${property.name}"
+            style="width: 100%; height: 150px; object-fit: cover; border-radius: 8px 8px 0 0;"
+          />
+          <div style="padding: 12px;">
+            <h3 style="margin: 0 0 10px 0; font-size: 16px; font-weight: 600; color: #212529;">
+              ${property.name}
+            </h3>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div style="flex: 1;">
+                <p style="margin: 0 0 6px 0; color: #6c757d; font-size: 13px; display: flex; align-items: center; gap: 5px;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg>
+                  ${property.zone}
+                </p>
+                <p style="margin: 0; color: #6c757d; font-size: 13px; display: flex; align-items: center; gap: 5px;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="9" y1="3" x2="9" y2="21"></line>
+                  </svg>
+                  ${property.size} mp
+                </p>
+              </div>
+              <div style="text-align: right;">
+                <p style="margin: 0; color: #1DA397; font-weight: 700; font-size: 22px; line-height: 1;">
+                  €${property.price.toLocaleString()}
+                </p>
+              </div>
+            </div>
+          </div>
+        `;
+
+        popupContent.addEventListener('click', () => {
+          window.location.href = `/properties/${property.id}`;
+        });
+
+        const popup = new mapboxgl.Popup({ 
+          offset: 25,
+          closeButton: true,
+          className: 'custom-map-popup',
+          maxWidth: '280px'
+        }).setDOMContent(popupContent);
+
+        new mapboxgl.Marker({ 
+          color: '#1DA397',
+          scale: 1.1
+        })
+          .setLngLat([property.lng, property.lat])
+          .setPopup(popup)
+          .addTo(map);
       });
-      
+
       return () => {
-        map.remove();
+        if (mapElement._mapboxInitialized) {
+          mapElement._mapboxInitialized = false;
+          map.remove();
+        }
       };
     }
-  }, [viewMode, properties]); 
+  }
+}, [viewMode, properties]);
 
   if (isLoading) {
     return <div>Please wait...</div>;
   }
+
+  const noResults = properties.length === 0;
 
   return (
     <div className="properties-page-container">
@@ -206,22 +300,28 @@ const Properties = () => {
               </div>
             </div>
 
-            <div className="properties-grid-layout">
-              {properties.map(property => (
-                <PropertyCard key={property.id} property={property} />
-              ))}
-            </div>
+            {noResults ? (
+              <div className="no-results-message">
+                Nu am găsit nicio proprietate care să se potrivească criteriilor tale de căutare.
+              </div>
+            ) : (
+              <div className="properties-grid-layout">
+                {properties.map(property => (
+                  <PropertyCard key={property.id} property={property} />
+                ))}
+              </div>
+            )}
           </main>
         )}
-
-        {viewMode !== 'list' && (
-          <div className="map-area">
-            <div id="map" className="leaflet-map"></div>
-          </div>
+      {viewMode !== 'list' && (
+        <div className="map-area">
+          <div id="map" className="#map"></div>
+        </div>
         )}
+        </div>
+      <ContactBanner />     
       </div>
-    </div>
-  );
-};
+    );
+  };
 
 export default Properties;

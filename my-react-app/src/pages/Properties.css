@@ -54,13 +54,18 @@
 
 .main-content-area.list {
   grid-template-columns: 280px 1fr;
+  max-width: 60%;
 }
+
 .main-content-area.split {
-  grid-template-columns: 280px 1fr 400px; 
+  grid-template-columns: 280px 2fr 500px; 
+  max-width: 75%;
+  padding-right: 2rem;
 }
+
 .main-content-area.map {
   grid-template-columns: 1fr;
-  padding: 0;
+  padding: 1rem;
 }
 
 .filters-sidebar {
@@ -321,21 +326,203 @@
   background: #179088;
 }
 
-/* Hartă */
+.property-card-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* map */
 .map-area {
   position: sticky;
   top: 160px;
-  height: calc(100vh - 200px);
+  right: 0;
+  height: calc(100vh - 15rem);
   border-radius: 12px;
   overflow: hidden;
 }
 
-.leaflet-map {
+#map {
   width: 100%;
   height: 100%;
+  border-radius: 12px;
 }
 
-.property-card-link {
-  text-decoration: none;
-  color: inherit;
+.mapboxgl-popup-content {
+  padding: 0 !important;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+.mapboxgl-popup-tip {
+  border-top-color: white !important;
+}
+
+.mapboxgl-ctrl-group {
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.mapboxgl-ctrl button {
+  width: 35px;
+  height: 35px;
+}
+
+.custom-map-popup .mapboxgl-popup-content {
+  padding: 0 !important;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  overflow: hidden;
+  min-width: 280px;
+}
+
+.custom-map-popup .mapboxgl-popup-tip {
+  border-top-color: white !important;
+}
+
+.map-popup-content {
+  transition: transform 0.2s ease;
+}
+
+.map-popup-content:hover {
+  transform: scale(1.02);
+}
+
+.custom-map-popup .mapboxgl-popup-close-button {
+  font-size: 20px;
+  padding: 8px;
+  color: #495057;
+  right: 8px;
+  top: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custom-map-popup .mapboxgl-popup-close-button:hover {
+  background: #1DA397;
+  color: white;
+}
+
+.contact-banner {
+    background: linear-gradient(135deg, #1DA397 0%, #179088 100%);
+    border-radius: 16px;
+    padding: 0;
+    margin: 4rem auto 2rem auto;
+    max-width: 1400px;
+    box-shadow: 0 10px 40px rgba(29, 163, 151, 0.2);
+    overflow: hidden;
+    position: relative;
+}
+
+.contact-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 400px;
+    height: 100%;
+    background: url('data:image/svg+xml,<svg width="400" height="200" xmlns="http://www.w3.org/2000/svg"><circle cx="350" cy="50" r="100" fill="rgba(255,255,255,0.1)"/><circle cx="320" cy="150" r="60" fill="rgba(255,255,255,0.08)"/></svg>') no-repeat;
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+.contact-banner-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 3rem;
+    padding: 3rem 3.5rem;
+    position: relative;
+    z-index: 1;
+}
+
+.contact-banner-left {
+    flex: 1;
+    color: white;
+}
+
+.contact-banner-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0 0 1rem 0;
+    color: white;
+    line-height: 1.2;
+}
+
+.contact-banner-subtitle {
+    font-size: 1.1rem;
+    margin: 0;
+    opacity: 0.95;
+    line-height: 1.6;
+    max-width: 600px;
+}
+
+.contact-banner-right {
+    flex-shrink: 0;
+}
+
+.contact-button {
+    background-color: white;
+    color: #1DA397;
+    text-decoration: none;
+    padding: 1.1rem 2.5rem;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.contact-button:hover {
+    background-color: #f8f9fa;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 968px) {
+    .contact-banner-content {
+        flex-direction: column;
+        text-align: center;
+        padding: 2.5rem 2rem;
+        gap: 2rem;
+    }
+
+    .contact-banner-title {
+        font-size: 1.6rem;
+    }
+
+    .contact-banner-subtitle {
+        font-size: 1rem;
+        max-width: 100%;
+    }
+
+    .contact-banner::before {
+        display: none;
+    }
+}
+
+@media (max-width: 640px) {
+    .contact-banner {
+        margin: 3rem 1rem 2rem 1rem;
+    }
+
+    .contact-banner-title {
+        font-size: 1.4rem;
+    }
+
+    .contact-button {
+        padding: 1rem 2rem;
+        font-size: 1rem;
+        width: 100%;
+        justify-content: center;
+    }
 }

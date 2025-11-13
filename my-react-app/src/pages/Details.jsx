@@ -5,6 +5,10 @@ import  supabase from '../supabaseClient';
 import { useParams, useNavigate } from 'react-router-dom';
 import lenus from "../assets/lenus.jpg";
 import ImageModal from '../components/ImageModal';
+import mapboxgl from 'mapbox-gl';
+import 'mapbox-gl/dist/mapbox-gl.css';
+
+mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
 const Details = () => {
   const [property, setProperty] = useState(null);
@@ -41,25 +45,62 @@ const Details = () => {
     fetchProperty();
   }, [id]);
   
-  useEffect(() => {
-    if (property?.lat && property.lng && document.getElementById('property-map')) {
-      if (!mapInstanceRef.current) {
-        import('leaflet').then(L => {
-          import('leaflet/dist/leaflet.css');
-          const map = L.map('property-map').setView([property.lat, property.lng], 15);
-          mapInstanceRef.current = map;
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {}).addTo(map);
-          L.marker([property.lat, property.lng]).addTo(map).bindPopup(property.title);
-        });
-      }
+useEffect(() => {
+  if (property?.lat && property.lng && document.getElementById('property-map')) {
+    const mapElement = document.getElementById('property-map');
+    
+    if (!mapInstanceRef.current && mapElement) {
+      const map = new mapboxgl.Map({
+        container: 'property-map',
+        style: 'mapbox://styles/mapbox/streets-v12',
+        center: [property.lng, property.lat], // [lng, lat]
+        zoom: 15,
+        pitch: 0,
+      });
+
+      map.addControl(new mapboxgl.NavigationControl(), 'top-right');
+
+      const popup = new mapboxgl.Popup({ 
+        offset: 25,
+        closeButton: false,
+        className: 'details-map-popup'
+      }).setHTML(`
+        <div style="padding: 12px; min-width: 220px;">
+          <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 600; color: #212529;">
+            ${property.name}
+          </h3>
+          <p style="margin: 0 0 5px 0; color: #1DA397; font-weight: 700; font-size: 18px;">
+            €${property.price.toLocaleString()}/lună
+          </p>
+          <p style="margin: 0; color: #6c757d; font-size: 14px; display: flex; align-items: center; gap: 5px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            ${property.address}
+          </p>
+        </div>
+      `);
+
+      new mapboxgl.Marker({ 
+        color: '#1DA397',
+        scale: 1.2
+      })
+        .setLngLat([property.lng, property.lat])
+        .setPopup(popup)
+        .addTo(map);
+
+      mapInstanceRef.current = map;
     }
-    return () => {
-      if (mapInstanceRef.current) {
-        mapInstanceRef.current.remove();
-        mapInstanceRef.current = null;
-      }
-    };
-  }, [property]);
+  }
+
+  return () => {
+    if (mapInstanceRef.current) {
+      mapInstanceRef.current.remove();
+      mapInstanceRef.current = null;
+    }
+  };
+}, [property]);
 
   const openModal = (index) => {
     setModalImageIndex(index);

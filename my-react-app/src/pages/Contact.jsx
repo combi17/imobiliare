@@ -63,7 +63,7 @@ const Contact = () => {
                   >
                     <option value="" disabled hidden>Alege un subiect</option>
                     <option value="Cerere oferta">Cerere oferta</option>
-                    <option value="Cerere vizualizare">Cerere vizualizare</option>
+                    <option value="Cerere vizualizare">Cerere vizionare</option>
                     <option value="Evaluare proprietate">Evaluare proprietate</option>
                     <option value="Alt subiect">Alt subiect</option>                                      
                   </select>

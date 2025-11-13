@@ -1,0 +1,21 @@
+{
+  "header": {
+    "acasa": "Acasă",
+    "proprietati": "Proprietăți",
+    "despre": "Despre Noi",
+    "contact": "Contact"
+  },
+  "despre": {
+    "hero": {
+      "titlu": "Despre East8",
+      "subtitlu": "Expertiză și Integritate în Imobiliarele Premium"
+    },
+    "viziune": {
+      "titlu": "Viziunea Noastră",
+      "text": "Fondată în 2018, Premium East8 a apărut ca răspuns la cererea pieței pentru o agenție de consultanță de nișă, dedicată exclusiv segmentului premium. Ne-am construit reputația pe o fundație de profesionalism absolut, transparență și o înțelegere profundă a investițiilor imobiliare de prestigiu."
+    },
+    "timeline": {
+      "titlu": "Cum ne-am dezvoltat"
+    }
+  }
+}

@@ -408,57 +408,83 @@
 }
 
 .contact-banner {
-    background: linear-gradient(135deg, #1DA397 0%, #179088 100%);
-    border-radius: 16px;
-    padding: 0;
-    margin: 4rem auto 2rem auto;
-    max-width: 1400px;
-    box-shadow: 0 10px 40px rgba(29, 163, 151, 0.2);
-    overflow: hidden;
+    background: linear-gradient(
+      to bottom,
+      #ffffff 0%,
+      #f5f7f9 40%,
+      #e9ecef 100%
+    );
+    
+    padding: 3rem 0;
+    display: flex;
+    justify-content: center;
     position: relative;
 }
 
 .contact-banner::before {
-    content: '';
+    content: "";
     position: absolute;
-    top: 0;
-    right: 0;
-    width: 400px;
-    height: 100%;
-    background: url('data:image/svg+xml,<svg width="400" height="200" xmlns="http://www.w3.org/2000/svg"><circle cx="350" cy="50" r="100" fill="rgba(255,255,255,0.1)"/><circle cx="320" cy="150" r="60" fill="rgba(255,255,255,0.08)"/></svg>') no-repeat;
-    opacity: 0.3;
-    pointer-events: none;
+    top: -80px;
+    right: -80px;
+    width: 380px;
+    height: 380px;
+    background: radial-gradient(circle, rgba(29, 163, 151, 0.12), transparent 70%);
+    border-radius: 50%;
+    filter: blur(20px);
+    opacity: 0.5;
+}
+
+.contact-banner::after {
+    content: "";
+    position: absolute;
+    bottom: -60px;
+    left: -60px;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(0, 0, 0, 0.04), transparent 70%);
+    border-radius: 50%;
+    filter: blur(25px);
+    opacity: 0.6;
 }
 
 .contact-banner-content {
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(6px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    padding: 2rem 3.5rem;
+    max-width: 900px;
+    width: 90%;
+    margin: 0 auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 3rem;
-    padding: 3rem 3.5rem;
-    position: relative;
-    z-index: 1;
+
+    box-shadow: 
+        0 10px 35px rgba(0, 0, 0, 0.07),
+        0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .contact-banner-left {
     flex: 1;
-    color: white;
+    color: #343a40;
 }
 
 .contact-banner-title {
-    font-size: 2rem;
+    font-size: 1.9rem;
     font-weight: 700;
-    margin: 0 0 1rem 0;
-    color: white;
-    line-height: 1.2;
+    margin: 0 0 0.8rem;
+    line-height: 1.25;
+    color: #343a40;
 }
 
 .contact-banner-subtitle {
-    font-size: 1.1rem;
-    margin: 0;
-    opacity: 0.95;
+    font-size: 1.05rem;
+    opacity: 0.9;
     line-height: 1.6;
-    max-width: 600px;
+    max-width: 500px;
 }
 
 .contact-banner-right {
@@ -466,63 +492,123 @@
 }
 
 .contact-button {
-    background-color: white;
-    color: #1DA397;
+    background-color: #1DA397;
+    color: white;
     text-decoration: none;
-    padding: 1.1rem 2.5rem;
+    padding: 1rem 2.2rem;
     border-radius: 50px;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 600;
     transition: all 0.3s ease;
     display: inline-flex;
     align-items: center;
-    gap: 0.75rem;
-    border: none;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    gap: 0.6rem;
+    box-shadow: 0 3px 12px rgba(29, 163, 151, 0.25);
 }
 
 .contact-button:hover {
-    background-color: #f8f9fa;
     transform: translateY(-3px);
-    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 20px rgba(29, 163, 151, 0.35);
 }
 
 @media (max-width: 968px) {
     .contact-banner-content {
         flex-direction: column;
         text-align: center;
-        padding: 2.5rem 2rem;
-        gap: 2rem;
+        padding: 2.5rem;
+        gap: 1.8rem;
     }
 
     .contact-banner-title {
         font-size: 1.6rem;
     }
 
-    .contact-banner-subtitle {
-        font-size: 1rem;
-        max-width: 100%;
-    }
-
-    .contact-banner::before {
+    .contact-banner::before,
+    .contact-banner::after {
         display: none;
     }
 }
 
 @media (max-width: 640px) {
-    .contact-banner {
-        margin: 3rem 1rem 2rem 1rem;
-    }
-
     .contact-banner-title {
         font-size: 1.4rem;
     }
 
     .contact-button {
-        padding: 1rem 2rem;
-        font-size: 1rem;
         width: 100%;
         justify-content: center;
+        padding: 0.9rem 1.8rem;
     }
+}
+
+
+.property-card-dubai {
+  position: relative;
+  border: 2px solid #D4AF37;
+}
+
+.property-card-dubai::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: 12px;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.property-card-dubai:hover::before {
+  opacity: 0.15;
+}
+
+.property-card-dubai:hover {
+  box-shadow: 0 8px 35px rgba(212, 175, 55, 0.25);
+}
+
+.property-card-dubai .card-image-container {
+  margin: -2px -2px 0 -2px;
+  border-radius: 12px 12px 0 0;
+  overflow: hidden;
+}
+
+.dubai-indicator {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.4);
+  z-index: 2;
+}
+
+.card-price-dubai {
+  color: #D4AF37 !important;
+}
+
+.location-country {
+  color: #D4AF37;
+  font-weight: 600;
+}
+
+.details-btn-dubai {
+  background: linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%) !important;
+  color: white !important;
+}
+
+.details-btn-dubai:hover {
+  background: linear-gradient(135deg, #C4941F 0%, #E4C02F 100%) !important;
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+}
+
+.flag-icon {
+  width: 16px;
+  height: auto;
+  border-radius: 3px;
 }

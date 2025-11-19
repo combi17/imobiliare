@@ -7,14 +7,24 @@ import './Properties.css';
 import supabase from "../supabaseClient"
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
+const flagUAEUrl = "https://flagcdn.com/16x12/ae.png";
 
 const PropertyCard = ({ property }) => {
+  const isDubai = property.city === 'Dubai' || property.country === 'UAE';
+  
   return (
     <Link to={`/properties/${property.id}`} className="property-card-link">
-    <div className="property-card">
+    <div className={`property-card ${isDubai ? 'property-card-dubai' : ''}`}>
       <div className="card-image-container">
         <img src={property.image_urls[0]} alt={property.name} className="card-image" />
         <div className="card-type-badge">{property.type}</div>
+
+        {isDubai && (
+          <div className="dubai-indicator">
+            <img src={flagUAEUrl} alt="UAE Flag" className="flag-icon" /> Dubai
+          </div>
+        )}
+        
         <div className="card-actions">
             <button className="action-btn"><Heart size={18} /></button>
             <button className="action-btn"><Eye size={18} /></button>
@@ -25,11 +35,17 @@ const PropertyCard = ({ property }) => {
         <div className="card-top">
           <div className="card-header">
             <h3 className="card-title">{property.name}</h3>
-            <p className="card-price">€{property.price.toLocaleString()}</p>
+            <p className={`card-price ${isDubai ? 'card-price-dubai' : ''}`}>
+              €{property.price.toLocaleString()}
+            </p>
           </div>
           <div className="card-location">
             <MapPin size={15} />
-            <span>{property.zone}</span>
+            {isDubai ? (
+              <span className="location-country">Dubai, UAE</span>
+            ) : (
+              <span>{property.zone}</span>
+            )}
           </div>
           <p className="card-description">{property.preview_description}</p>
         </div>
@@ -51,7 +67,9 @@ const PropertyCard = ({ property }) => {
             </div>
             <div className="card-footer">
                 <span className="card-year">Construit în {property.year}</span>
-                <button className="details-btn">Vezi detalii</button>
+                <button className={`details-btn ${isDubai ? 'details-btn-dubai' : ''}`}>
+                  Vezi detalii
+                </button>
             </div>
         </div>
       </div>

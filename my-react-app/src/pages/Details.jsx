@@ -240,7 +240,7 @@ useEffect(() => {
 
           <div className="map-section">
             <h2>Localizare</h2>
-            <div id="property-map" className="leaflet-map"></div>
+            <div id="property-map"></div>
           </div>
         </div>
       </div>

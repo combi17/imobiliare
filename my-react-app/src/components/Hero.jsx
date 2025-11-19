@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import Slideshow from './Slideshow.jsx';
 import { Link } from "react-router-dom";
 import '../pages/HomePage.css';
+import DubaiSection from '../components/DubaiSection';
 
 const Hero = () => {
 
@@ -52,6 +53,8 @@ function animateCounters() {
         <Slideshow/>
     </div>
 
+    <DubaiSection />
+
     <section className="stats">
         <div className="stats-container">
           <div className="stat-item">
@@ -80,32 +83,32 @@ function animateCounters() {
                 <p>Oferim soluții integrate pentru toate nevoile tale imobiliare, de la consultanță la finalizarea tranzacției.</p>
             </div>
             <div className="services-grid">
-                <div className="service-card">
+                <div className="service-card animate__animated animate__fadeInUp animate__delay-1s">
                     <div className="service-icon">🏢</div>
                     <h3>Vânzare Proprietăți</h3>
                     <p>Marketing profesional, evaluare corectă și negociere expertă pentru vânzarea rapidă și profitabilă a proprietății tale.</p>
                 </div>
-                <div className="service-card">
+                <div className="service-card animate__animated animate__fadeInUp animate__delay-2s">
                     <div className="service-icon">🔍</div>
                     <h3>Căutare Personalizată</h3>
                     <p>Identificăm proprietatea perfectă pentru tine, bazându-ne pe preferințele și bugetul tău specific.</p>
                 </div>
-                <div className="service-card">
+                <div className="service-card animate__animated animate__fadeInUp animate__delay-3s">
                     <div className="service-icon">💼</div>
                     <h3>Consultanță Investiții</h3>
                     <p>Strategii de investiții imobiliare personalizate pentru maximizarea profiturilor și minimizarea riscurilor.</p>
                 </div>
-                <div className="service-card">
+                <div className="service-card animate__animated animate__fadeInUp animate__delay-2s">
                     <div className="service-icon">📋</div>
                     <h3>Management Proprietăți</h3>
                     <p>Servicii complete de administrare pentru proprietarii care doresc venituri pasive din închirieri.</p>
                 </div>
-                <div className="service-card">
+                <div className="service-card animate__animated animate__fadeInUp animate__delay-3s">
                     <div className="service-icon">⚖️</div>
                     <h3>Suport Juridic</h3>
                     <p>Asistență legală completă pentru toate aspectele juridice ale tranzacțiilor imobiliare.</p>
                 </div>
-                <div className="service-card">
+                <div className="service-card animate__animated animate__fadeInUp animate__delay-1s">
                     <div className="service-icon">📊</div>
                     <h3>Evaluări Profesionale</h3>
                     <p>Rapoarte detaliate de evaluare realizate de experți certificați pentru prețuri corecte de piață.</p>

@@ -192,12 +192,12 @@
         .btn-primary {
             background: linear-gradient(135deg, var(--primary), #26B5A8);
             color: white;
-            box-shadow: 0 8px 30px rgba(29, 163, 151, 0.4);
+            box-shadow: 0 8px 30px rgba(29, 163, 151, 0.1);
         }
 
         .btn-primary:hover {
             transform: translateY(-3px);
-            box-shadow: 0 12px 40px rgba(29, 163, 151, 0.6);
+            box-shadow: 0 12px 40px rgba(29, 163, 151, 0.25);
         }
 
         .btn-secondary {
@@ -298,8 +298,7 @@
         }
 
         .stats {
-            background: linear-gradient(to bottom, rgba(29, 163, 151, 0.67), #ffffff);
-            
+            background: linear-gradient(to bottom, #c3cfe2 0%, #f5f7fa  100%);
             padding: 6rem 5% 5rem;
             color: white;
             position: relative;
@@ -409,9 +408,10 @@
             padding: 3rem 2rem;
             text-align: center;
             transition: all 0.4s ease;
-            border: 1px solid rgba(29, 163, 151, 0.1);
+            border: 1.5px solid rgba(29, 163, 151, 0.25);
             position: relative;
             overflow: hidden;
+            box-shadow: 0 8px 20px rgba(29,163,151,0.05);
         }
 
         .service-card::before {

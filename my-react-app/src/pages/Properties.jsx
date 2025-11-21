@@ -11,13 +11,17 @@ const flagUAEUrl = "https://flagcdn.com/16x12/ae.png";
 
 const PropertyCard = ({ property }) => {
   const isDubai = property.city === 'Dubai' || property.country === 'UAE';
+
+  const isRental = property.transaction_type === 'Inchiriere';
+  const priceSuffix = isRental ? '/lună' : '';
+  const formattedPrice = property.price.toLocaleString();
   
   return (
     <Link to={`/properties/${property.id}`} className="property-card-link">
     <div className={`property-card ${isDubai ? 'property-card-dubai' : ''}`}>
       <div className="card-image-container">
         <img src={property.image_urls[0]} alt={property.name} className="card-image" />
-        <div className="card-type-badge">{property.type}</div>
+        <div className="card-type-badge">{property.transaction_type}</div>
 
         {isDubai && (
           <div className="dubai-indicator">
@@ -36,7 +40,8 @@ const PropertyCard = ({ property }) => {
           <div className="card-header">
             <h3 className="card-title">{property.name}</h3>
             <p className={`card-price ${isDubai ? 'card-price-dubai' : ''}`}>
-              €{property.price.toLocaleString()}
+              €{formattedPrice}
+              {priceSuffix && <span className="price-suffix">{priceSuffix}</span>}
             </p>
           </div>
           <div className="card-location">

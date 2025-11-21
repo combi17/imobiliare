@@ -30,7 +30,7 @@ const SearchCard = () => {
   return (
     <section className="hero">
         <div className="hero-content">
-          <div className="hero-text">
+          <div className="hero-text animate__animated animate__fadeInLeft">
             <h1>Imobiliare <span className="highlight">Premium</span> în București</h1>
             <p>Descoperă proprietățile de lux și investițiile imobiliare de elită cu East8.</p>
             <div className="hero-buttons">
@@ -38,7 +38,7 @@ const SearchCard = () => {
               <Link to="/contact" className="btn-secondary"> Evaluare Gratuită</Link>
             </div>
           </div>
-          <div className="search-widget">
+          <div className="search-widget animate__animated animate__fadeInRight">
             <h3>Caută Proprietatea Ideală</h3>
             <form className="search-form" onSubmit={handleSearch}>
               <div className="form-row">

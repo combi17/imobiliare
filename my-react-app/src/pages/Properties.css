@@ -157,8 +157,10 @@
     border: none;
     cursor: pointer;
 }
-.sort-options button:hover { background-color: #f8f9fa; }
 
+.sort-options button:hover { 
+  background-color: #f8f9fa; 
+}
 
 .properties-grid-layout {
   display: grid;
@@ -169,7 +171,7 @@
 .property-card {
   display: flex;
   background: white;
-  border: 1px solid #e9ecef;
+  border: 1px solid #d7d8d8;
   border-radius: 12px;
   overflow: hidden;
   transition: box-shadow 0.3s ease, transform 0.3s ease;

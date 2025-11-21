@@ -3,11 +3,21 @@ import { Link } from 'react-router-dom';
 import { MapPin, Home, ArrowRight, Sparkles } from 'lucide-react';
 import supabase from '../supabaseClient';
 import './DubaiSection.css';
+import useScrollAnimation from '../hooks/useScrollAnimation';
 
 const flagUAEUrl = "https://flagcdn.com/16x12/ae.png";
 
 const DubaiSection = () => {
-  
+  const titleRef = useScrollAnimation('animate__fadeInUp', 0.3);
+  const subtitleRef = useScrollAnimation('animate__fadeInUp', 0.4);
+  const bannerRef = useScrollAnimation('animate__fadeInUp', 0.2);
+
+  const card1Ref = useScrollAnimation('animate__fadeInLeft', 0.2);
+  const card2Ref = useScrollAnimation('animate__fadeInLeft', 0.4);
+  const card3Ref = useScrollAnimation('animate__fadeInLeft', 0.6);
+
+  const cardRefs = [card1Ref, card2Ref, card3Ref];
+
   const [dubaiProperties, setDubaiProperties] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -15,7 +25,7 @@ const DubaiSection = () => {
     const fetchDubaiProperties = async () => {
       const { data, error } = await supabase
         .from('properties')
-        .select('*')
+        .select('*, transaction_type')
         .eq('city', 'Dubai')
         .limit(3);
 
@@ -28,22 +38,26 @@ const DubaiSection = () => {
     fetchDubaiProperties();
   }, []);
 
-  if (loading) return null;
-  if (dubaiProperties.length === 0) return null;
-
   return (
     <section className="dubai-section">
       <div className="dubai-container">
+        {loading || dubaiProperties.length === 0 ? (
+
+        <div style={{ padding: '50px', textAlign: 'center' }}>
+          {loading ? 'Se încarcă proprietățile din Dubai...' : 'Momentan nu sunt proprietăți disponibile în Dubai.'}
+        </div>
+      ) : (
+      <>
         <div className="dubai-header">
           <div className="dubai-header-content">
             <div className="dubai-badge">
               <Sparkles size={16} />
               <span>Nou</span>
             </div>
-            <h2 className="dubai-title animate__animated animate__fadeInUp">
+            <h2 className="dubai-title" ref={titleRef}>
               Descoperă Proprietăți Premium în Dubai
             </h2>
-            <p className="dubai-subtitle animate__animated animate__fadeInUp animate__delay-1s">
+            <p className="dubai-subtitle" ref={subtitleRef}>
               Investește în una dintre cele mai dinamice piețe imobiliare din lume. 
               Proprietăți de lux cu randamente excepționale.
             </p>
@@ -55,11 +69,17 @@ const DubaiSection = () => {
         </div>
 
         <div className="dubai-properties-grid">
-          {dubaiProperties.map((property) => (
+          {dubaiProperties.map((property, index) => {
+            const isRental = property.transaction_type === 'Inchiriere';
+            const priceSuffix = isRental ? '/lună' : '';
+            const formattedPrice = property.price.toLocaleString();
+
+            return (            
             <Link 
               key={property.id} 
               to={`/properties/${property.id}`}
-              className="dubai-property-card animate__animated animate__fadeInLeft"
+              className="dubai-property-card"
+              ref={cardRefs[index]}
             >
               <div className="dubai-card-image-wrapper">
                 <img 
@@ -88,15 +108,17 @@ const DubaiSection = () => {
                     <span>{property.size} mp</span>
                   </div>
                   <div className="dubai-card-price">
-                    €{property.price.toLocaleString()}
+                    €{formattedPrice}
+                    {priceSuffix && <span className="price-suffix">{priceSuffix}</span>}
                   </div>
                 </div>
               </div>
             </Link>
-          ))}
+            );
+          })}
         </div>
 
-        <div className="dubai-cta-banner animate__animated animate__fadeInUp animate__delay-2s">
+        <div className="dubai-cta-banner" ref={bannerRef}>
           <div className="dubai-cta-content">
             <h3>Interesat de investiții internaționale?</h3>
             <p>Echipa noastră te poate ghida prin întreg procesul de achiziție în Dubai</p>
@@ -105,6 +127,8 @@ const DubaiSection = () => {
             Contactează un consultant
           </Link>
         </div>
+      </>
+      )}
       </div>
     </section>
   );

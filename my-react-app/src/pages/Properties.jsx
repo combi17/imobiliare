@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
+import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import { Filter, MapPin, Home, Bath, Maximize, Heart, Eye, Map, List, ChevronDown, Mail } from 'lucide-react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './Properties.css';
-import supabase from "../supabaseClient"
+import supabase from "../supabaseClient";
+import { PrimeReactProvider, PrimeReactContext } from 'primereact/api';
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 const flagUAEUrl = "https://flagcdn.com/16x12/ae.png";
@@ -108,6 +109,7 @@ const Properties = () => {
   const [properties, setProperties] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const [viewMode, setViewMode] = useState('list'); //list, split, map
   const [sortBy, setSortBy] = useState('');
@@ -135,6 +137,7 @@ const Properties = () => {
       const type = searchParams.get('type');
       const minPrice = searchParams.get('minPrice');
       const maxPrice = searchParams.get('maxPrice');
+      const city = searchParams.get('city');
 
       if (zone)
         query = query.eq('zone', zone);
@@ -142,8 +145,10 @@ const Properties = () => {
         query = query.eq('type', type);
       if (minPrice)
         query = query.gte('price', minPrice);
-      if(maxPrice)
+      if (maxPrice)
         query = query.lte('price', maxPrice);
+      if (city)
+        query = query.eq('city', city);
 
       const { data, error } = await query;
 
@@ -162,6 +167,43 @@ const Properties = () => {
   const handleFilterChange = (key, value) => {
     setFilters(prev => ({ ...prev, [key]: value }));
   };
+
+  const applyFilters = () => {
+    const currentParams = new URLSearchParams(searchParams);
+    
+    Object.keys(filters).forEach(key => {
+      const value = filters[key];
+
+      if (value && value.trim() !== '') {
+        currentParams.set(key, value);
+      } else {
+        currentParams.delete(key);
+      }
+    });
+
+    navigate(`/properties?${currentParams.toString()}`);
+  }
+
+  useEffect(() => {
+    const initialFilters = {};
+    const filterKeys = ['propertyType', 'zone', 'minPrice', 'maxPrice', 'minSurface', 'maxSurface', 'rooms', 'bathrooms'];
+    let shouldUpdateState = false;
+
+    filterKeys.forEach(key => {
+        const paramValue = searchParams.get(key);
+        if (paramValue) {
+            initialFilters[key] = paramValue;
+            shouldUpdateState = true;
+        } else {
+            initialFilters[key] = ''; 
+        }
+    });
+
+    if (shouldUpdateState) {
+        setFilters(prev => ({ ...prev, ...initialFilters }));
+    }
+    
+}, [searchParams]);
 
   // harta leaflet SCHIMBATA IN MAPBOX
    useEffect(() => {
@@ -303,6 +345,9 @@ const Properties = () => {
               <label>Zonă</label>
               <input type="text" placeholder="ex: Sector 1" value={filters.zone} onChange={(e) => handleFilterChange('zone', e.target.value)} />
             </div>
+            <button className="apply-filters-btn" onClick={applyFilters}>
+              Aplică Filtre
+            </button>
           </aside>
         )}
 

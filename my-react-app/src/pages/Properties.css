@@ -614,3 +614,30 @@
   height: auto;
   border-radius: 3px;
 }
+
+
+.apply-filters-btn {
+    width: 100%;
+    padding: 1rem;
+    margin-top: 1.5rem;
+    background: #26B5A8;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 550;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s ease;
+    
+}
+
+.apply-filters-btn:hover {
+    transform: translateY(-2px); 
+    box-shadow: 0 8px 25px rgba(29, 163, 151, 0.2); 
+}
+
+.apply-filters-btn:active {
+    transform: translateY(0);
+    opacity: 0.9;
+}

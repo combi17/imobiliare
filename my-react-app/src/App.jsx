@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Routes, Route } from "react-router-dom";
 
 import Homepage from './pages/Homepage.jsx'
@@ -13,17 +13,10 @@ import Despre from "./pages/Despre.jsx";
 import "./App.css";
 
 export default function App() {
-  const [darkMode, setDarkMode] = useState(false);
-
-  const toggleTheme = () => {
-    setDarkMode((prev) => !prev);
-  };
-
-
   return (
     <>
-      <div className={`app-layout ${darkMode ? "dark-theme" : ""}`}>
-        <Header darkMode={darkMode} toggleTheme={toggleTheme} />
+      <div className="app-layout">
+        <Header/>
         <ScrollToTop />
         <main>
           <Routes>

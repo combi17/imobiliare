@@ -1,14 +1,54 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams, Link, useNavigate } from 'react-router-dom';
-import { Filter, MapPin, Home, Bath, Maximize, Heart, Eye, Map, List, ChevronDown, Mail } from 'lucide-react';
+import { Filter, MapPin, Home, Bath, Maximize, Map, List, ChevronDown, Mail, X} from 'lucide-react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './Properties.css';
 import supabase from "../supabaseClient";
-import { PrimeReactProvider, PrimeReactContext } from 'primereact/api';
+import GroupedLocationFilter from '../components/GroupedLocationFilter';
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 const flagUAEUrl = "https://flagcdn.com/16x12/ae.png";
+
+const ActiveFilters = ({ filters, onRemoveFilter, onClearAll }) => {
+  const getFilterLabel = (key, value) => {
+    const labels = {
+      propertyType: 'Tip',
+      city: 'Oraș',
+      zone: 'Zonă',
+      minPrice: 'Preț min',
+      maxPrice: 'Preț max',
+      minSize: 'Suprafață min',
+      maxSize: 'Suprafață max'
+    };
+    return `${labels[key]}: ${value}`;
+  };
+
+  const activeFilters = Object.entries(filters).filter(([key, value]) => value && value !== '');
+  
+  if (activeFilters.length === 0) return null;
+
+  return (
+    <div className="active-filters-bar">
+      <span className="active-filters-label">Filtre active:</span>
+      <div className="active-filters-list">
+        {activeFilters.map(([key, value]) => (
+          <div key={key} className="filter-chip">
+            <span>{getFilterLabel(key, value)}</span>
+            <button onClick={() => onRemoveFilter(key)} className="filter-chip-remove">
+              <X size={14} />
+            </button>
+          </div>
+        ))}
+        {activeFilters.length > 1 && (
+          <button onClick={onClearAll} className="clear-all-filters">
+            Șterge toate
+          </button>
+        )}
+      </div>
+    </div>
+  );
+};
 
 const PropertyCard = ({ property }) => {
   const isDubai = property.city === 'Dubai' || property.country === 'UAE';
@@ -29,11 +69,6 @@ const PropertyCard = ({ property }) => {
             <img src={flagUAEUrl} alt="UAE Flag" className="flag-icon" /> Dubai
           </div>
         )}
-        
-        <div className="card-actions">
-            <button className="action-btn"><Heart size={18} /></button>
-            <button className="action-btn"><Eye size={18} /></button>
-        </div>
       </div>
 
       <div className="card-content">
@@ -105,6 +140,54 @@ const ContactBanner = () => {
     );
 };
 
+const CustomSelectFilter = ({ label, options, currentValue, onSelectChange }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const dropdownRef = useRef(null);
+
+    const getDisplayLabel = () => {
+        const selectedOption = options.find(opt => opt.value === currentValue);
+        return selectedOption ? selectedOption.label : options[0].label;
+    };
+
+    const handleSelection = (value) => {
+        onSelectChange(value);
+        setIsOpen(false);
+    };
+    
+    return (
+        <div className="filter-group">
+            <label>{label}</label>
+            <div 
+                className="custom-dropdown-container" 
+                ref={dropdownRef}
+                style={{ position: 'relative' }} 
+            >
+                <div 
+                    className={`dropdown-display-area ${isOpen ? 'active' : ''}`} 
+                    onClick={() => setIsOpen(!isOpen)}
+                >
+                    {getDisplayLabel()}
+                    <ChevronDown size={16} className={`chevron-icon ${isOpen ? 'rotate-up' : ''}`} />
+                </div>
+                
+                {isOpen && (
+                    <div className="dropdown-options-list">
+                        {options.map((option) => (
+                            <div
+                                key={option.value}
+                                className={`dropdown-item-zone ${option.value === currentValue ? 'selected-item' : ''}`}
+                                onClick={() => handleSelection(option.value)}
+                            >
+                                {option.label}
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+};
+
 const Properties = () => {
   const [properties, setProperties] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -112,18 +195,25 @@ const Properties = () => {
   const navigate = useNavigate();
 
   const [viewMode, setViewMode] = useState('list'); //list, split, map
-  const [sortBy, setSortBy] = useState('');
+  const currentSortBy = searchParams.get('sortBy');
   const [showSortDropdown, setShowSortDropdown] = useState(false);
   const [filters, setFilters] = useState({
     propertyType: '',
     zone: '',
     minPrice: '',
     maxPrice: '',
-    minSurface: '',
-    maxSurface: '',
+    minSize: '',
+    maxSize: '',
     rooms: '',
     bathrooms: ''
   });
+
+  const propertyTypeOptions = [
+      { label: 'Toate', value: '' },
+      { label: 'Birou', value: 'Birou' },
+      { label: 'Apartament', value: 'Casa Vacanta' },
+      { label: 'Vilă', value: 'Vila' }
+  ];
 
   useEffect(() => {
     const getProperties = async () => {
@@ -134,10 +224,12 @@ const Properties = () => {
         .select('*');
       
       const zone = searchParams.get('zone');
+      const transaction_type = searchParams.get('transaction_type');
       const type = searchParams.get('type');
       const minPrice = searchParams.get('minPrice');
       const maxPrice = searchParams.get('maxPrice');
       const city = searchParams.get('city');
+      const sortParam = searchParams.get('sortBy');
 
       if (zone)
         query = query.eq('zone', zone);
@@ -149,6 +241,20 @@ const Properties = () => {
         query = query.lte('price', maxPrice);
       if (city)
         query = query.eq('city', city);
+      if (transaction_type)
+        query = query.eq('transaction_type', transaction_type);
+
+      if (sortParam) {
+        if (sortParam === 'price-asc') {
+          query = query.order('price', { ascending: true });
+        } 
+        else if (sortParam === 'price-desc') {
+          query = query.order('price', { ascending: false });
+        }
+      } 
+      else {
+        query = query.order('created_at', { ascending: false });
+    }
 
       const { data, error } = await query;
 
@@ -164,25 +270,81 @@ const Properties = () => {
   }, [searchParams]);
 
 
-  const handleFilterChange = (key, value) => {
-    setFilters(prev => ({ ...prev, [key]: value }));
-  };
+const handleFilterChange = (key, value) => {
+  const updatedFilters = { ...filters, [key]: value };
+  setFilters(updatedFilters);
+  setTimeout(() => applyFiltersToURL(updatedFilters), 300);
+};
 
-  const applyFilters = () => {
+  const handleSortChange = (sortOption) => {
     const currentParams = new URLSearchParams(searchParams);
-    
-    Object.keys(filters).forEach(key => {
-      const value = filters[key];
-
-      if (value && value.trim() !== '') {
-        currentParams.set(key, value);
-      } else {
-        currentParams.delete(key);
-      }
-    });
-
+    if (sortOption) {
+      currentParams.set('sortBy', sortOption);
+    }
+    else {
+      currentParams.delete('sortBy')
+    }
     navigate(`/properties?${currentParams.toString()}`);
+    setShowSortDropdown(false);
   }
+
+  const handleLocationFilterChange = (selectedValue) => {
+    let newFilters = { ...filters };
+    delete newFilters.city;
+    delete newFilters.zone;
+    
+    if (selectedValue) {
+        if (selectedValue.startsWith('city_')) {
+            const cityName = selectedValue.replace('city_', '');
+            newFilters.city = cityName;
+            
+        } else if (selectedValue.startsWith('zone_')) {
+            const zoneName = selectedValue.replace('zone_', '');
+            newFilters.zone = zoneName; 
+        }
+    }
+    setFilters(newFilters);
+};
+
+const applyFiltersToURL = (updatedFilters) => {
+  const currentParams = new URLSearchParams(searchParams);
+  
+  Object.keys(updatedFilters).forEach(key => {
+    const value = updatedFilters[key];
+    if (value && value.trim() !== '') {
+      currentParams.set(key, value);
+    } else {
+      currentParams.delete(key);
+    }
+  });
+
+  navigate(`/properties?${currentParams.toString()}`);
+};
+
+const handleRangeChange = (key, value) => {
+  const updatedFilters = { ...filters, [key]: value };
+  setFilters(updatedFilters);
+  
+  clearTimeout(window.rangeTimeout);
+  window.rangeTimeout = setTimeout(() => {
+    applyFiltersToURL(updatedFilters);
+  }, 800);
+};
+
+const handleRemoveFilter = (key) => {
+  const updatedFilters = { ...filters, [key]: '' };
+  setFilters(updatedFilters);
+  applyFiltersToURL(updatedFilters);
+};
+
+const handleClearAllFilters = () => {
+  const clearedFilters = Object.keys(filters).reduce((acc, key) => {
+    acc[key] = '';
+    return acc;
+  }, {});
+  setFilters(clearedFilters);
+  navigate('/properties');
+};
 
   useEffect(() => {
     const initialFilters = {};
@@ -334,20 +496,69 @@ const Properties = () => {
               <Filter size={20} />
               <h3>Filtre</h3>
             </div>
+            <CustomSelectFilter
+                 label="Tip Proprietate"
+                 options={propertyTypeOptions}
+                 currentValue={filters.propertyType}
+                 onSelectChange={(value) => handleFilterChange('propertyType', value)}
+             />
+
+            <GroupedLocationFilter
+              onFilterChange={(selectedValue) => handleLocationFilterChange(selectedValue)} 
+            />
+            
+            <CustomSelectFilter
+                 label="Tip Proprietate"
+                 options={propertyTypeOptions}
+                 currentValue={filters.propertyType}
+                 onSelectChange={(value) => handleFilterChange('propertyType', value)}
+             />
              <div className="filter-group">
-              <label>Tip Proprietate</label>
-              <select value={filters.propertyType} onChange={(e) => handleFilterChange('propertyType', e.target.value)}>
-                <option value="">Toate</option>
-                <option value="Birou">Birou</option>
-              </select>
-            </div>
+                 <label>Preț (€{filters.minPrice || 0} - €{filters.maxPrice || 'Max'})</label>
+                 <div className="range-slider-container">
+                     <input 
+                         type="range"
+                         min="0"
+                         max="5000000"
+                         step="10000"
+                         value={filters.minPrice || 0}
+                         onChange={(e) => handleRangeChange('minPrice', e.target.value)}
+                         className="range-input range-min"
+                     />
+                     <input 
+                         type="range"
+                         min="0"
+                         max="5000000"
+                         step="10000"
+                         value={filters.maxPrice || 5000000}
+                         onChange={(e) => handleRangeChange('maxPrice', e.target.value)}
+                         className="range-input range-max"
+                     />
+                 </div>
+             </div>
              <div className="filter-group">
-              <label>Zonă</label>
-              <input type="text" placeholder="ex: Sector 1" value={filters.zone} onChange={(e) => handleFilterChange('zone', e.target.value)} />
-            </div>
-            <button className="apply-filters-btn" onClick={applyFilters}>
-              Aplică Filtre
-            </button>
+                 <label>Suprafață ({filters.minSize || 0} mp - {filters.maxSize|| 'Max'} mp)</label>
+                 <div className="range-slider-container">
+                     <input 
+                         type="range"
+                         min="0"
+                         max="500"
+                         step="10"
+                         value={filters.minSize || 0}
+                         onChange={(e) => handleRangeChange('minSize', e.target.value)}
+                         className="range-input range-min"
+                     />
+                     <input 
+                         type="range"
+                         min="0"
+                         max="500"
+                         step="10"
+                         value={filters.maxSize || 500}
+                         onChange={(e) => handleRangeChange('maxSize', e.target.value)}
+                         className="range-input range-max"
+                     />
+                 </div>
+             </div>
           </aside>
         )}
 
@@ -357,16 +568,36 @@ const Properties = () => {
               <h2>{properties.length} proprietăți găsite</h2>
               <div className="sort-dropdown">
                  <button className="sort-button" onClick={() => setShowSortDropdown(!showSortDropdown)}>
-                  Sortează <ChevronDown size={16} />
+                  {
+                    currentSortBy === 'price-asc' ? 'Preț crescător' : 
+                    currentSortBy === 'price-desc' ? 'Preț descrescător' : 'Sortează'
+                  }
+                  <ChevronDown size={16} />
                 </button>
                 {showSortDropdown && (
                   <div className="sort-options">
-                     <button onClick={() => {setSortBy('price-asc'); setShowSortDropdown(false);}}>Preț crescător</button>
-                     <button onClick={() => {setSortBy('price-desc'); setShowSortDropdown(false);}}>Preț descrescător</button>
+                    <button 
+                      onClick={() => handleSortChange('price-asc')}
+                      className={currentSortBy === 'price-asc' ? 'active-sort-option' : ''}
+                    >
+                      Preț crescător
+                    </button>
+                    <button 
+                      onClick={() => handleSortChange('price-desc')}
+                      className={currentSortBy === 'price-desc' ? 'active-sort-option' : ''}
+                    >
+                      Preț descrescător
+                    </button>
                   </div>
                 )}
               </div>
             </div>
+
+            <ActiveFilters 
+              filters={filters}
+              onRemoveFilter={handleRemoveFilter}
+              onClearAll={handleClearAllFilters}
+            />
 
             {noResults ? (
               <div className="no-results-message">

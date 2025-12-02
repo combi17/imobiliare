@@ -188,6 +188,58 @@ const CustomSelectFilter = ({ label, options, currentValue, onSelectChange }) =>
     );
 };
 
+const PriceRangeFilter = ({ minPrice, maxPrice, onMinChange, onMaxChange }) => {
+  return (
+    <div className="filter-group">
+      <label>Preț minim</label>
+      <input 
+        type="number"
+        placeholder="€0"
+        value={minPrice || ''}
+        onChange={(e) => onMinChange(e.target.value)}
+        className="price-input"
+      />
+      
+      <label style={{ marginTop: '1rem' }}>Preț maxim</label>
+      <input 
+        type="number"
+        placeholder="€Max"
+        value={maxPrice || ''}
+        onChange={(e) => onMaxChange(e.target.value)}
+        className="price-input"
+      />
+    </div>
+  );
+};
+
+const SizeCheckboxFilter = ({ selectedRanges, onRangeToggle }) => {
+  const sizeRanges = [
+    { label: '0-50 mp', value: '0-50' },
+    { label: '50-100 mp', value: '50-100' },
+    { label: '100-150 mp', value: '100-150' },
+    { label: '150-200 mp', value: '150-200' },
+    { label: '200+ mp', value: '200+' }
+  ];
+
+  return (
+    <div className="filter-group">
+      <label>Suprafață</label>
+      <div className="checkbox-list">
+        {sizeRanges.map(range => (
+          <label key={range.value} className="checkbox-item">
+            <input
+              type="checkbox"
+              checked={selectedRanges.includes(range.value)}
+              onChange={() => onRangeToggle(range.value)}
+            />
+            <span>{range.label}</span>
+          </label>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 const Properties = () => {
   const [properties, setProperties] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -202,8 +254,7 @@ const Properties = () => {
     zone: '',
     minPrice: '',
     maxPrice: '',
-    minSize: '',
-    maxSize: '',
+    sizeRanges: [],
     rooms: '',
     bathrooms: ''
   });
@@ -243,6 +294,33 @@ const Properties = () => {
         query = query.eq('city', city);
       if (transaction_type)
         query = query.eq('transaction_type', transaction_type);
+
+      const sizeRangesParam = searchParams.get('sizeRanges');
+      if (sizeRangesParam) {
+        const ranges = sizeRangesParam.split(',');
+        let sizeFilter = null;
+        
+        ranges.forEach(range => {
+          if (range === '0-50') {
+            if (!sizeFilter) sizeFilter = query.lte('size', 50);
+            else sizeFilter = sizeFilter.or('size.lte.50');
+          } else if (range === '50-100') {
+            if (!sizeFilter) sizeFilter = query.gte('size', 50).lte('size', 100);
+            else sizeFilter = sizeFilter.or('size.gte.50,size.lte.100');
+          } else if (range === '100-150') {
+            if (!sizeFilter) sizeFilter = query.gte('size', 100).lte('size', 150);
+            else sizeFilter = sizeFilter.or('size.gte.100,size.lte.150');
+          } else if (range === '150-200') {
+            if (!sizeFilter) sizeFilter = query.gte('size', 150).lte('size', 200);
+            else sizeFilter = sizeFilter.or('size.gte.150,size.lte.200');
+          } else if (range === '200+') {
+            if (!sizeFilter) sizeFilter = query.gte('size', 200);
+            else sizeFilter = sizeFilter.or('size.gte.200');
+          }
+        });
+        
+        if (sizeFilter) query = sizeFilter;
+      }
 
       if (sortParam) {
         if (sortParam === 'price-asc') {
@@ -306,12 +384,30 @@ const handleFilterChange = (key, value) => {
     setFilters(newFilters);
 };
 
+const handleSizeRangeToggle = (range) => {
+  const updatedRanges = filters.sizeRanges.includes(range)
+    ? filters.sizeRanges.filter(r => r !== range)
+    : [...filters.sizeRanges, range];
+  
+  const updatedFilters = { ...filters, sizeRanges: updatedRanges };
+  setFilters(updatedFilters);
+  
+  setTimeout(() => applyFiltersToURL(updatedFilters), 300);
+};
+
 const applyFiltersToURL = (updatedFilters) => {
   const currentParams = new URLSearchParams(searchParams);
   
   Object.keys(updatedFilters).forEach(key => {
     const value = updatedFilters[key];
-    if (value && value.trim() !== '') {
+    
+    if (key === 'sizeRanges') {
+      if (value && value.length > 0) {
+        currentParams.set('sizeRanges', value.join(','));
+      } else {
+        currentParams.delete('sizeRanges');
+      }
+    } else if (value && value.trim() !== '') {
       currentParams.set(key, value);
     } else {
       currentParams.delete(key);
@@ -506,59 +602,17 @@ const handleClearAllFilters = () => {
             <GroupedLocationFilter
               onFilterChange={(selectedValue) => handleLocationFilterChange(selectedValue)} 
             />
-            
-            <CustomSelectFilter
-                 label="Tip Proprietate"
-                 options={propertyTypeOptions}
-                 currentValue={filters.propertyType}
-                 onSelectChange={(value) => handleFilterChange('propertyType', value)}
-             />
-             <div className="filter-group">
-                 <label>Preț (€{filters.minPrice || 0} - €{filters.maxPrice || 'Max'})</label>
-                 <div className="range-slider-container">
-                     <input 
-                         type="range"
-                         min="0"
-                         max="5000000"
-                         step="10000"
-                         value={filters.minPrice || 0}
-                         onChange={(e) => handleRangeChange('minPrice', e.target.value)}
-                         className="range-input range-min"
-                     />
-                     <input 
-                         type="range"
-                         min="0"
-                         max="5000000"
-                         step="10000"
-                         value={filters.maxPrice || 5000000}
-                         onChange={(e) => handleRangeChange('maxPrice', e.target.value)}
-                         className="range-input range-max"
-                     />
-                 </div>
-             </div>
-             <div className="filter-group">
-                 <label>Suprafață ({filters.minSize || 0} mp - {filters.maxSize|| 'Max'} mp)</label>
-                 <div className="range-slider-container">
-                     <input 
-                         type="range"
-                         min="0"
-                         max="500"
-                         step="10"
-                         value={filters.minSize || 0}
-                         onChange={(e) => handleRangeChange('minSize', e.target.value)}
-                         className="range-input range-min"
-                     />
-                     <input 
-                         type="range"
-                         min="0"
-                         max="500"
-                         step="10"
-                         value={filters.maxSize || 500}
-                         onChange={(e) => handleRangeChange('maxSize', e.target.value)}
-                         className="range-input range-max"
-                     />
-                 </div>
-             </div>
+            <PriceRangeFilter
+              minPrice={filters.minPrice}
+              maxPrice={filters.maxPrice}
+              onMinChange={(value) => handleFilterChange('minPrice', value)}
+              onMaxChange={(value) => handleFilterChange('maxPrice', value)}
+            />
+
+            <SizeCheckboxFilter
+              selectedRanges={filters.sizeRanges}
+              onRangeToggle={handleSizeRangeToggle}
+            />
           </aside>
         )}
 

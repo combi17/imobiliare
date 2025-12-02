@@ -4,12 +4,14 @@
 
 body {
   overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 .properties-page-container {
   width: 100%;
   max-width: 100vw;
   overflow-x: hidden;
+  overflow-y: hidden;
   padding-top: 80px;
   background-color: #f8f9fa;
 }
@@ -94,6 +96,28 @@ body {
   height: fit-content;
   position: sticky;
   top: 130px;
+  max-height: calc(100vh - 150px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #1DA397 #f1f1f1;
+}
+
+.filters-sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.filters-sidebar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.filters-sidebar::-webkit-scrollbar-thumb {
+  background: #1DA397;
+  border-radius: 10px;
+}
+
+.filters-sidebar::-webkit-scrollbar-thumb:hover {
+  background: #179088;
 }
 
 .filters-header {
@@ -981,4 +1005,56 @@ body {
 .clear-all-filters:hover {
   background: #c82333;
   transform: translateY(-1px);
+}
+
+.price-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.price-input:focus {
+  outline: none;
+  border-color: #1DA397;
+  box-shadow: 0 0 0 1px #1DA397;
+}
+
+.price-input:hover {
+  border-color: #aaa;
+}
+
+.checkbox-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.checkbox-item:hover {
+  background-color: #f8f9fa;
+}
+
+.checkbox-item input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #1DA397;
+}
+
+.checkbox-item span {
+  font-size: 0.9rem;
+  color: #495057;
+  user-select: none;
 }

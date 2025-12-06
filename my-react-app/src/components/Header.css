@@ -130,6 +130,10 @@ nav {
     font-weight: 300;
 }
 
+.mobile-language-item {
+    display: none;
+}
+
 .hamburger {
     display: none;
     flex-direction: column;
@@ -177,6 +181,7 @@ nav {
 }
 
 .mobile-overlay.active {
+    display: block;
     opacity: 1;
 }
 
@@ -192,6 +197,33 @@ nav {
 
     .hamburger {
         display: flex;
+    }
+
+    .desktop-language {
+        display: none;
+    }
+
+    .mobile-language-item {
+        display: flex;
+        width: 100%;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 2px solid rgba(29, 163, 151, 0.15);
+    }
+
+    .mobile-language-switcher {
+        width: 100%;
+        justify-content: center;
+        padding: 0.7rem 1rem;
+        background: rgba(29, 163, 151, 0.05);
+    }
+
+    .mobile-language-switcher button {
+        padding: 0.5rem 0.7rem;
+    }
+
+    .mobile-language-switcher .lang-text {
+        font-size: 0.95rem;
     }
 
     .nav-links {
@@ -213,6 +245,7 @@ nav {
         border-left: 1px solid rgba(29, 163, 151, 0.2);
         transform: none;
         left: auto;
+        overflow-y: auto;
     }
 
     .nav-links.active {
@@ -224,6 +257,10 @@ nav {
         border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     }
 
+    .nav-links li.mobile-language-item {
+        border-bottom: none;
+    }
+
     .nav-links a {
         width: 100%;
         font-size: 1.1rem;
@@ -232,39 +269,6 @@ nav {
 
     .nav-links a::after {
         display: none;
-    }
-
-    .header-right-controls {
-        position: fixed;
-        bottom: 2rem;
-        right: -100%;
-        transition: right 0.4s ease;
-        z-index: 1001;
-        padding: 0 2rem;
-    }
-
-    .header-right-controls.active {
-        right: 0;
-    }
-
-    .language-switcher {
-        padding: 0.6rem 1rem;
-    }
-
-    .language-switcher button {
-        padding: 0.5rem;
-    }
-
-    .language-switcher .lang-text {
-        display: none;
-    }
-
-    .language-switcher .flag-icon {
-        width: 24px;
-    }
-
-    .lang-separator {
-        margin: 0 0.3rem;
     }
 }
 
@@ -275,10 +279,10 @@ nav {
 
     .nav-links {
         width: 85%;
-        padding: 4rem 1.5rem 1.5rem 1.5rem;
+        padding: 4.5rem 1.5rem 1.5rem 1.5rem;
     }
 
-    .language-switcher .flag-icon {
-        width: 22px;
+    .mobile-language-switcher .flag-icon {
+        width: 20px;
     }
 }

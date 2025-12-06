@@ -9,10 +9,10 @@ import useScrollAnimation from '../hooks/useScrollAnimation';
 const Hero = () => {
     const serviceCard1Ref = useScrollAnimation('animate__fadeInUp', 0.25);
     const serviceCard2Ref = useScrollAnimation('animate__fadeInUp', 0.5);
-    const serviceCard3Ref = useScrollAnimation('animate__fadeInUp', 0.75);
+    const serviceCard3Ref = useScrollAnimation('animate__fadeInUp', 0.6);
     const serviceCard4Ref = useScrollAnimation('animate__fadeInUp', 0.25);
     const serviceCard5Ref = useScrollAnimation('animate__fadeInUp', 0.5);
-    const serviceCard6Ref = useScrollAnimation('animate__fadeInUp', 0.75); 
+    const serviceCard6Ref = useScrollAnimation('animate__fadeInUp', 0.6); 
 function animateCounters() {
     const counters = document.querySelectorAll('.stat-number');
     const observer = new IntersectionObserver((entries) => {

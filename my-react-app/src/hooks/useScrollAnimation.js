@@ -24,7 +24,7 @@ const useScrollAnimation = (animationClass = 'animate__fadeInUp', threshold = 0.
       },
       {
         threshold: threshold,
-        rootMargin: '0px'
+        rootMargin: '50px'
       }
     );
 

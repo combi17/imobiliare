@@ -27,10 +27,20 @@ const flagUAEUrl = "https://flagcdn.com/16x12/ae.png";
 const flagROUrl = "https://flagcdn.com/16x12/ro.png";
 const flagMap = { 'AE': flagUAEUrl, 'RO': flagROUrl };
 
-const CustomGroupedLocationFilter = ({ onFilterChange }) => {
+const CustomGroupedLocationFilter = ({ onFilterChange, currentCity, currentZone }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedValue, setSelectedValue] = useState(null);
     const dropdownRef = useRef(null);
+    const getSelectedValue = () => {
+        if (currentCity) {
+            return `city_${currentCity}`;
+        }
+        if (currentZone) {
+            return `zone_${currentZone}`;
+        }
+        return null;
+    };
+
+    const selectedValue = getSelectedValue();
 
     const getDisplayLabel = () => {
         if (!selectedValue) return "Toate";
@@ -43,7 +53,6 @@ const CustomGroupedLocationFilter = ({ onFilterChange }) => {
     };
 
     const handleSelection = (value) => {
-        setSelectedValue(value);
         onFilterChange(value);
         setIsOpen(false);
     };
@@ -54,11 +63,15 @@ const CustomGroupedLocationFilter = ({ onFilterChange }) => {
                 setIsOpen(false);
             }
         }
-        document.addEventListener("mousedown", handleClickOutside);
+        
+        if (isOpen) {
+            document.addEventListener("mousedown", handleClickOutside);
+        }
+        
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [dropdownRef]);
+    }, [isOpen]);
 
     const renderOptions = () => {
         return groupedLocations.map((group) => (
@@ -87,7 +100,6 @@ const CustomGroupedLocationFilter = ({ onFilterChange }) => {
         ));
     };
 
-
     return (
         <div className="filter-group">
             <label>Oraș / Zonă</label>
@@ -101,7 +113,7 @@ const CustomGroupedLocationFilter = ({ onFilterChange }) => {
                     onClick={() => setIsOpen(!isOpen)}
                 >
                     {getDisplayLabel()}
-                    <svg className="chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <svg className={`chevron-icon ${isOpen ? 'rotate-up' : ''}`} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <polyline points="6 9 12 15 18 9"></polyline>
                     </svg>
                 </div>

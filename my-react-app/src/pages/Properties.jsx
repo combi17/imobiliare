@@ -11,20 +11,58 @@ mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 const flagUAEUrl = "https://flagcdn.com/16x12/ae.png";
 
 const ActiveFilters = ({ filters, onRemoveFilter, onClearAll }) => {
-  const getFilterLabel = (key, value) => {
-    const labels = {
-      propertyType: 'Tip',
-      city: 'Oraș',
-      zone: 'Zonă',
-      minPrice: 'Preț min',
-      maxPrice: 'Preț max',
-      minSize: 'Suprafață min',
-      maxSize: 'Suprafață max'
-    };
-    return `${labels[key]}: ${value}`;
+const getFilterLabel = (key, value) => {
+  const labels = {
+    propertyType: 'Tip',
+    transactionType: 'Tranzacție',
+    city: 'Oraș',
+    zone: 'Zonă',
+    minPrice: 'Preț min',
+    maxPrice: 'Preț max',
+    sizeRanges: 'Suprafață',
+    rooms: 'Camere',
+    yearBuiltRanges: 'An construcție',
+    bathrooms: 'Băi'
   };
+  
+  if (key === 'sizeRanges' && Array.isArray(value)) {
+    return `${labels[key]}: ${value.join(', ')}`;
+  }
+  
+  if (key === 'yearBuiltRanges' && Array.isArray(value)) {
+    const readableYears = value.map(v => {
+      const yearLabels = {
+        'before-2000': 'înainte 2000',
+        '2000-2010': '2000-2010',
+        '2010-2015': '2010-2015',
+        '2015-2020': '2015-2020',
+        'after-2020': 'după 2020'
+      };
+      return yearLabels[v] || v;
+    });
+    return `${labels[key]}: ${readableYears.join(', ')}`;
+  }
 
-  const activeFilters = Object.entries(filters).filter(([key, value]) => value && value !== '');
+  if (key === 'rooms') {
+    const roomsLabels = {
+      '1': '1 cameră',
+      '2': '2 camere',
+      '3': '3 camere',
+      '4': '4 camere',
+      '5+': '5+ camere'
+    };
+    return `${labels[key]}: ${roomsLabels[value] || value}`;
+  }
+  
+  return `${labels[key]}: ${value}`;
+};
+
+  const activeFilters = Object.entries(filters).filter(([key, value]) => {
+    if (Array.isArray(value)) {
+      return value.length > 0;
+    }
+    return value && value !== '' && value !== 'undefined';
+  });
   
   if (activeFilters.length === 0) return null;
 
@@ -42,7 +80,12 @@ const ActiveFilters = ({ filters, onRemoveFilter, onClearAll }) => {
         ))}
         {activeFilters.length > 1 && (
           <button onClick={onClearAll} className="clear-all-filters">
-            Șterge toate
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              <line x1="10" y1="11" x2="10" y2="17"></line>
+              <line x1="14" y1="11" x2="14" y2="17"></line>
+            </svg>
           </button>
         )}
       </div>
@@ -153,6 +196,22 @@ const CustomSelectFilter = ({ label, options, currentValue, onSelectChange }) =>
         onSelectChange(value);
         setIsOpen(false);
     };
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsOpen(false);
+            }
+        };
+
+        if (isOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [isOpen]);
     
     return (
         <div className="filter-group">
@@ -194,7 +253,7 @@ const PriceRangeFilter = ({ minPrice, maxPrice, onMinChange, onMaxChange }) => {
       <label>Preț minim</label>
       <input 
         type="number"
-        placeholder="€0"
+        placeholder="€ Min"
         value={minPrice || ''}
         onChange={(e) => onMinChange(e.target.value)}
         className="price-input"
@@ -203,7 +262,7 @@ const PriceRangeFilter = ({ minPrice, maxPrice, onMinChange, onMaxChange }) => {
       <label style={{ marginTop: '1rem' }}>Preț maxim</label>
       <input 
         type="number"
-        placeholder="€Max"
+        placeholder="€ Max"
         value={maxPrice || ''}
         onChange={(e) => onMaxChange(e.target.value)}
         className="price-input"
@@ -214,11 +273,11 @@ const PriceRangeFilter = ({ minPrice, maxPrice, onMinChange, onMaxChange }) => {
 
 const SizeCheckboxFilter = ({ selectedRanges, onRangeToggle }) => {
   const sizeRanges = [
-    { label: '0-50 mp', value: '0-50' },
-    { label: '50-100 mp', value: '50-100' },
-    { label: '100-150 mp', value: '100-150' },
-    { label: '150-200 mp', value: '150-200' },
-    { label: '200+ mp', value: '200+' }
+    { label: ' 0-50 mp', value: '0-50' },
+    { label: ' 50-100 mp', value: '50-100' },
+    { label: ' 100-150 mp', value: '100-150' },
+    { label: ' 150-200 mp', value: '150-200' },
+    { label: ' 200+ mp', value: '200+' }
   ];
 
   return (
@@ -240,6 +299,36 @@ const SizeCheckboxFilter = ({ selectedRanges, onRangeToggle }) => {
   );
 };
 
+const YearBuiltCheckboxFilter = ({ selectedRanges, onRangeToggle }) => {
+  const yearOptions = [
+    { label: ' Înainte de 2000', value: 'before-2000' },
+    { label: ' 2000-2010', value: '2000-2010' },
+    { label: ' 2010-2015', value: '2010-2015' },
+    { label: ' 2015-2020', value: '2015-2020' },
+    { label: ' După 2020', value: 'after-2020' }
+  ];
+
+  const safeSelectedRanges = selectedRanges || [];
+
+  return (
+    <div className="filter-group">
+      <label>An Construcție</label>
+      <div className="checkbox-list">
+        {yearOptions.map(option => (
+          <label key={option.value} className="checkbox-item">
+            <input
+              type="checkbox"
+              checked={safeSelectedRanges.includes(option.value)}
+              onChange={() => onRangeToggle(option.value)}
+            />
+            <span>{option.label}</span>
+          </label>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 const Properties = () => {
   const [properties, setProperties] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -249,22 +338,49 @@ const Properties = () => {
   const [viewMode, setViewMode] = useState('list'); //list, split, map
   const currentSortBy = searchParams.get('sortBy');
   const [showSortDropdown, setShowSortDropdown] = useState(false);
+
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
+
   const [filters, setFilters] = useState({
     propertyType: '',
+    transactionType: '',
     zone: '',
+    city: '',
     minPrice: '',
     maxPrice: '',
     sizeRanges: [],
     rooms: '',
-    bathrooms: ''
+    yearBuiltRanges: [],
   });
 
   const propertyTypeOptions = [
-      { label: 'Toate', value: '' },
-      { label: 'Birou', value: 'Birou' },
-      { label: 'Apartament', value: 'Casa Vacanta' },
-      { label: 'Vilă', value: 'Vila' }
+    { label: 'Toate', value: '' },
+    { label: 'Birou', value: 'Birou' },
+    { label: 'Apartament', value: 'Apartament' },
+    { label: 'Vilă', value: 'Vila' }
   ];
+
+  const roomsOptions = [
+    { label: 'Orice', value: '' },
+    { label: '1 cameră', value: '1' },
+    { label: '2 camere', value: '2' },
+    { label: '3 camere', value: '3' },
+    { label: '4 camere', value: '4' },
+    { label: '5+ camere', value: '5+' }
+  ];
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 1024);
+      if (window.innerWidth < 1024) {
+        setViewMode('list');
+      }
+    };
+
+  window.addEventListener('resize', handleResize);
+  return () => window.removeEventListener('resize', handleResize);
+}, []);
 
   useEffect(() => {
     const getProperties = async () => {
@@ -281,6 +397,9 @@ const Properties = () => {
       const maxPrice = searchParams.get('maxPrice');
       const city = searchParams.get('city');
       const sortParam = searchParams.get('sortBy');
+      const rooms = searchParams.get('rooms');
+      const sizeRangesParam = searchParams.get('sizeRanges');
+      const yearBuiltRangesParam = searchParams.get('yearBuiltRanges');
 
       if (zone)
         query = query.eq('zone', zone);
@@ -295,31 +414,58 @@ const Properties = () => {
       if (transaction_type)
         query = query.eq('transaction_type', transaction_type);
 
-      const sizeRangesParam = searchParams.get('sizeRanges');
       if (sizeRangesParam) {
         const ranges = sizeRangesParam.split(',');
-        let sizeFilter = null;
-        
-        ranges.forEach(range => {
+
+        const orConditions = ranges.map(range => {
           if (range === '0-50') {
-            if (!sizeFilter) sizeFilter = query.lte('size', 50);
-            else sizeFilter = sizeFilter.or('size.lte.50');
+            return 'size.lte.50';
           } else if (range === '50-100') {
-            if (!sizeFilter) sizeFilter = query.gte('size', 50).lte('size', 100);
-            else sizeFilter = sizeFilter.or('size.gte.50,size.lte.100');
+            return 'size.gte.50,size.lte.100';
           } else if (range === '100-150') {
-            if (!sizeFilter) sizeFilter = query.gte('size', 100).lte('size', 150);
-            else sizeFilter = sizeFilter.or('size.gte.100,size.lte.150');
+            return 'size.gte.100,size.lte.150';
           } else if (range === '150-200') {
-            if (!sizeFilter) sizeFilter = query.gte('size', 150).lte('size', 200);
-            else sizeFilter = sizeFilter.or('size.gte.150,size.lte.200');
+            return 'size.gte.150,size.lte.200';
           } else if (range === '200+') {
-            if (!sizeFilter) sizeFilter = query.gte('size', 200);
-            else sizeFilter = sizeFilter.or('size.gte.200');
+            return 'size.gte.200';
           }
-        });
+          return null;
+        }).filter(Boolean);
+
+        if (orConditions.length > 0) {
+          query = query.or(orConditions.join(','));
+        }
+      }
+
+      if (yearBuiltRangesParam) {
+        const ranges = yearBuiltRangesParam.split(',');
         
-        if (sizeFilter) query = sizeFilter;
+        const orConditions = ranges.map(range => {
+          if (range === 'before-2000') {
+            return 'year.lt.2000';
+          } else if (range === '2000-2010') {
+            return 'year.gte.2000,year.lte.2010';
+          } else if (range === '2010-2015') {
+            return 'year.gte.2010,year.lte.2015';
+          } else if (range === '2015-2020') {
+            return 'year.gte.2015,year.lte.2020';
+          } else if (range === 'after-2020') {
+            return 'year.gt.2020';
+          }
+          return null;
+        }).filter(Boolean);
+
+        if (orConditions.length > 0) {
+          query = query.or(orConditions.join(','));
+        }
+      }
+
+      if (rooms) {
+        if (rooms === '5+') {
+          query = query.gte('rooms', 5);
+        } else {
+          query = query.eq('rooms', rooms);
+        }
       }
 
       if (sortParam) {
@@ -347,11 +493,36 @@ const Properties = () => {
     getProperties();
   }, [searchParams]);
 
+  const sortDropdownRef = useRef(null);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (sortDropdownRef.current && !sortDropdownRef.current.contains(event.target)) {
+        setShowSortDropdown(false);
+      }
+    };
+
+    if (showSortDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showSortDropdown]);
+
 
 const handleFilterChange = (key, value) => {
   const updatedFilters = { ...filters, [key]: value };
   setFilters(updatedFilters);
-  setTimeout(() => applyFiltersToURL(updatedFilters), 300);
+  
+  if (key === 'minPrice' || key === 'maxPrice') {
+    clearTimeout(window.priceTimeout);
+    window.priceTimeout = setTimeout(() => {
+      applyFiltersToURL(updatedFilters);
+    }, 1000);
+  } else {
+    setTimeout(() => applyFiltersToURL(updatedFilters), 300);
+  }
 };
 
   const handleSortChange = (sortOption) => {
@@ -382,6 +553,7 @@ const handleFilterChange = (key, value) => {
         }
     }
     setFilters(newFilters);
+    setTimeout(() => applyFiltersToURL(newFilters), 300);
 };
 
 const handleSizeRangeToggle = (range) => {
@@ -401,13 +573,13 @@ const applyFiltersToURL = (updatedFilters) => {
   Object.keys(updatedFilters).forEach(key => {
     const value = updatedFilters[key];
     
-    if (key === 'sizeRanges') {
+    if (key === 'sizeRanges' || key === 'yearBuiltRanges') {
       if (value && value.length > 0) {
-        currentParams.set('sizeRanges', value.join(','));
+        currentParams.set(key, value.join(','));
       } else {
-        currentParams.delete('sizeRanges');
+        currentParams.delete(key);
       }
-    } else if (value && value.trim() !== '') {
+    } else if (value && value !== '' && value !== 'undefined') {
       currentParams.set(key, value);
     } else {
       currentParams.delete(key);
@@ -417,7 +589,7 @@ const applyFiltersToURL = (updatedFilters) => {
   navigate(`/properties?${currentParams.toString()}`);
 };
 
-const handleRangeChange = (key, value) => {
+/* const handleRangeChange = (key, value) => {
   const updatedFilters = { ...filters, [key]: value };
   setFilters(updatedFilters);
   
@@ -425,43 +597,60 @@ const handleRangeChange = (key, value) => {
   window.rangeTimeout = setTimeout(() => {
     applyFiltersToURL(updatedFilters);
   }, 800);
-};
+}; */
 
 const handleRemoveFilter = (key) => {
-  const updatedFilters = { ...filters, [key]: '' };
+  const updatedFilters = { 
+    ...filters, 
+    [key]: Array.isArray(filters[key]) ? [] : '' 
+  };
   setFilters(updatedFilters);
   applyFiltersToURL(updatedFilters);
 };
 
 const handleClearAllFilters = () => {
-  const clearedFilters = Object.keys(filters).reduce((acc, key) => {
-    acc[key] = '';
-    return acc;
-  }, {});
+  const clearedFilters = {
+    propertyType: '',
+    transactionType: '',
+    zone: '',
+    city: '',
+    minPrice: '',
+    maxPrice: '',
+    sizeRanges: [],
+    rooms: '',
+    yearBuiltRanges: [],
+    bathrooms: ''
+  };
   setFilters(clearedFilters);
   navigate('/properties');
 };
 
+const handleYearBuiltRangeToggle = (range) => {
+  const updatedRanges = filters.yearBuiltRanges.includes(range)
+    ? filters.yearBuiltRanges.filter(r => r !== range)
+    : [...filters.yearBuiltRanges, range];
+  
+  const updatedFilters = { ...filters, yearBuiltRanges: updatedRanges };
+  setFilters(updatedFilters);
+  
+  setTimeout(() => applyFiltersToURL(updatedFilters), 300);
+};
+
   useEffect(() => {
-    const initialFilters = {};
-    const filterKeys = ['propertyType', 'zone', 'minPrice', 'maxPrice', 'minSurface', 'maxSurface', 'rooms', 'bathrooms'];
-    let shouldUpdateState = false;
-
-    filterKeys.forEach(key => {
-        const paramValue = searchParams.get(key);
-        if (paramValue) {
-            initialFilters[key] = paramValue;
-            shouldUpdateState = true;
-        } else {
-            initialFilters[key] = ''; 
-        }
-    });
-
-    if (shouldUpdateState) {
-        setFilters(prev => ({ ...prev, ...initialFilters }));
-    }
+    const initialFilters = {
+      propertyType: searchParams.get('propertyType') || '',
+      transactionType: searchParams.get('transactionType') || '',
+      zone: searchParams.get('zone') || '',
+      city: searchParams.get('city') || '',
+      minPrice: searchParams.get('minPrice') || '',
+      maxPrice: searchParams.get('maxPrice') || '',
+      sizeRanges: searchParams.get('sizeRanges')?.split(',').filter(Boolean) || [],
+      rooms: searchParams.get('rooms') || '',
+      yearBuiltRanges: searchParams.get('yearBuiltRanges')?.split(',').filter(Boolean) || [],
+    };
     
-}, [searchParams]);
+    setFilters(initialFilters);
+  }, [searchParams]); 
 
   // harta leaflet SCHIMBATA IN MAPBOX
    useEffect(() => {
@@ -559,6 +748,31 @@ const handleClearAllFilters = () => {
 
   return (
     <div className="properties-page-container">
+      <button 
+        className="mobile-filters-toggle"
+        onClick={() => setShowMobileFilters(!showMobileFilters)}
+      >
+        <Filter size={20} />
+        Filtrează
+        {Object.values(filters).filter(v => 
+          Array.isArray(v) ? v.length > 0 : v && v !== ''
+        ).length > 0 && (
+          <span className="filters-badge">
+            {Object.values(filters).filter(v => 
+              Array.isArray(v) ? v.length > 0 : v && v !== ''
+            ).length}
+          </span>
+        )}
+      </button>
+
+      {showMobileFilters && (
+        <div 
+          className="mobile-filters-overlay"
+          onClick={() => setShowMobileFilters(false)}
+        />
+      )}
+
+    {!isMobile && (      
       <div className="view-header">
         <div className="view-controls">
            <button 
@@ -584,24 +798,46 @@ const handleClearAllFilters = () => {
           </button>
         </div>
       </div>
+      )}
 
       <div className={`main-content-area ${viewMode}`}>
         {viewMode !== 'map' && (
-          <aside className="filters-sidebar">
-             <div className="filters-header">
-              <Filter size={20} />
-              <h3>Filtre</h3>
+          <aside className={`filters-sidebar ${showMobileFilters ? 'mobile-active' : ''}`}>
+            <div className="filters-header">
+              <div className="filters-header-left">
+                <Filter size={20} />
+                <h3>Filtre</h3>
+              </div>
+              <button 
+                className="close-filters-btn"
+                onClick={() => setShowMobileFilters(false)}
+              >
+                <X size={24} />
+              </button>
             </div>
+
             <CustomSelectFilter
                  label="Tip Proprietate"
                  options={propertyTypeOptions}
                  currentValue={filters.propertyType}
                  onSelectChange={(value) => handleFilterChange('propertyType', value)}
-             />
+             />            
+            
+            <CustomSelectFilter
+              label="Tip Tranzacție"
+              options={[
+                { label: 'Toate', value: '' },
+                { label: 'Vânzare', value: 'Vanzare' },
+                { label: 'Închiriere', value: 'Inchiriere' }
+              ]}
+              currentValue={filters.transactionType}
+              onSelectChange={(value) => handleFilterChange('transactionType', value)}
+            />
 
             <GroupedLocationFilter
               onFilterChange={(selectedValue) => handleLocationFilterChange(selectedValue)} 
             />
+            
             <PriceRangeFilter
               minPrice={filters.minPrice}
               maxPrice={filters.maxPrice}
@@ -613,6 +849,25 @@ const handleClearAllFilters = () => {
               selectedRanges={filters.sizeRanges}
               onRangeToggle={handleSizeRangeToggle}
             />
+
+            <CustomSelectFilter
+              label="Număr Camere"
+              options={roomsOptions}
+              currentValue={filters.rooms}
+              onSelectChange={(value) => handleFilterChange('rooms', value)}
+            />
+
+            <YearBuiltCheckboxFilter
+              selectedRanges={filters.yearBuiltRanges}
+              onRangeToggle={handleYearBuiltRangeToggle}
+            />
+            
+            <button 
+              className="apply-filters-btn"
+              onClick={() => setShowMobileFilters(false)}
+            >
+              Aplică Filtrele
+            </button>
           </aside>
         )}
 
@@ -620,7 +875,7 @@ const handleClearAllFilters = () => {
           <main className="properties-list-container">
             <div className="results-header">
               <h2>{properties.length} proprietăți găsite</h2>
-              <div className="sort-dropdown">
+              <div className="sort-dropdown" ref={sortDropdownRef}>
                  <button className="sort-button" onClick={() => setShowSortDropdown(!showSortDropdown)}>
                   {
                     currentSortBy === 'price-asc' ? 'Preț crescător' : 

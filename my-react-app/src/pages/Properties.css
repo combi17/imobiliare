@@ -92,7 +92,7 @@ body {
   background: white;
   border: 1px solid #e9ecef;
   border-radius: 12px;
-  padding: 1.5rem;
+  padding: 2.5rem;
   height: fit-content;
   position: sticky;
   top: 130px;
@@ -100,24 +100,46 @@ body {
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: #1DA397 #f1f1f1;
+  overflow-x: hidden;
+  direction: rtl;
+  padding-right: 2rem;
+  padding-left: 1.5rem;
+}
+
+.filters-sidebar > * {
+  direction: ltr;
 }
 
 .filters-sidebar::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 
 .filters-sidebar::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 10px;
+  background: transparent;
 }
 
 .filters-sidebar::-webkit-scrollbar-thumb {
-  background: #1DA397;
+  background: transparent;
   border-radius: 10px;
+  transition: background 0.3s ease;
+}
+
+.filters-sidebar:hover::-webkit-scrollbar-thumb {
+  background: rgba(29, 163, 151, 0.3);
 }
 
 .filters-sidebar::-webkit-scrollbar-thumb:hover {
-  background: #179088;
+  background: rgba(29, 163, 151, 0.5);
+}
+
+/* firefox */
+.filters-sidebar {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+.filters-sidebar:hover {
+  scrollbar-color: rgba(29, 163, 151, 0.3) transparent;
 }
 
 .filters-header {
@@ -991,20 +1013,31 @@ body {
 }
 
 .clear-all-filters {
-  background: #dc3545;
-  color: white;
-  border: none;
-  padding: 0.4rem 1rem;
-  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.7rem;
+  background: rgba(220, 53, 69, 0.08);
+  color: #c9302c;
+  border: 1.5px solid rgba(220, 53, 69, 0.2);
+  border-radius: 8px;
   font-size: 0.85rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
 .clear-all-filters:hover {
-  background: #c82333;
+  background: rgba(220, 53, 69, 0.15);
+  border-color: rgba(220, 53, 69, 0.4);
+  color: #a02622;
   transform: translateY(-1px);
+}
+
+.clear-all-filters svg {
+  flex-shrink: 0;
 }
 
 .price-input {
@@ -1029,32 +1062,209 @@ body {
 .checkbox-list {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
 }
 
 .checkbox-item {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.65rem;
   cursor: pointer;
-  padding: 0.5rem;
-  border-radius: 6px;
-  transition: background-color 0.2s ease;
+  padding: 0.65rem 0.75rem;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+  border: 1.5px solid transparent;
+  background: rgba(245, 247, 246, 0.3);
 }
 
 .checkbox-item:hover {
-  background-color: #f8f9fa;
+  background-color: rgba(29, 163, 151, 0.08);
+  border-color: rgba(29, 163, 151, 0.2);
 }
 
 .checkbox-item input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   cursor: pointer;
-  accent-color: #1DA397;
+  accent-color: var(--primary);
+  margin: 0;
+  flex-shrink: 0;
+  border-radius: 4px;
+  transform: translateY(3px);
 }
 
 .checkbox-item span {
   font-size: 0.9rem;
-  color: #495057;
+  color: var(--dark-gray);
   user-select: none;
+  line-height: 1.2;
+}
+
+.checkbox-item input[type="checkbox"]:checked {
+  transform: scale(1.05);
+}
+
+.checkbox-item:has(input[type="checkbox"]:checked) {
+  background-color: rgba(29, 163, 151, 0.1);
+  border-color: var(--primary);
+}
+
+.checkbox-item:has(input[type="checkbox"]:checked) span {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.chevron-icon {
+  transition: transform 0.3s ease;
+}
+
+.chevron-icon.rotate-up {
+  transform: rotate(180deg);
+}
+
+
+
+.mobile-filters-toggle {
+  display: none;
+}
+
+.close-filters-btn {
+  display: none;
+}
+
+.filters-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.apply-filters-btn {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .mobile-filters-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, var(--primary), #26B5A8);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 15px rgba(29, 163, 151, 0.3);
+    transition: all 0.3s ease;
+    position: relative;
+    width: 75%;
+    justify-content: center;
+    margin-left: 2.9rem;
+  }
+
+  .mobile-filters-toggle:active {
+    transform: scale(0.98);
+  }
+
+  .filters-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #dc3545;
+    color: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: bold;
+    border: 2px solid white;
+  }
+
+  .mobile-filters-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .filters-sidebar {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    height: 100vh;
+    width: 85%;
+    max-width: 400px;
+    z-index: 1000;
+    background: white;
+    overflow-y: auto;
+    padding: 1.5rem;
+    box-shadow: 5px 0 25px rgba(0, 0, 0, 0.2);
+    transition: left 0.4s ease;
+    border: none;
+  }
+
+  .filters-sidebar.mobile-active {
+    left: 0;
+  }
+
+  .filters-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid rgba(29, 163, 151, 0.15);
+  }
+
+  .close-filters-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(29, 163, 151, 0.1);
+    border: none;
+    padding: 0.5rem;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .close-filters-btn:active {
+    background: rgba(29, 163, 151, 0.2);
+    transform: scale(0.95);
+  }
+
+  .apply-filters-btn {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(135deg, var(--primary), #26B5A8);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 2rem;
+    box-shadow: 0 4px 15px rgba(29, 163, 151, 0.3);
+    transition: all 0.3s ease;
+  }
+
+  .apply-filters-btn:active {
+    transform: scale(0.98);
+  }
 }

@@ -48,9 +48,27 @@ const Header = () => {
             <li><Link to="/properties" onClick={closeMenu}>{t('header.proprietati')}</Link></li>
             <li><Link to="/despre" onClick={closeMenu}>{t('header.despre')}</Link></li>
             <li><Link to="/contact" onClick={closeMenu}>{t('header.contact')}</Link></li>
+            <li className="mobile-language-item">
+              <div className="language-switcher mobile-language-switcher">
+                <button 
+                  onClick={() => changeLanguage('ro')} 
+                  className={i18n.language === 'ro' ? 'active' : ''}
+                >
+                  <img src={flagRoUrl} alt="Steag România" className="flag-icon" />
+                  <span className="lang-text">Română</span>
+                </button>
+                <span className="lang-separator">|</span>
+                <button 
+                  onClick={() => changeLanguage('en')} 
+                  className={i18n.language === 'en' ? 'active' : ''}
+                >
+                  <img src={flagGbUrl} alt="Steag Marea Britanie" className="flag-icon" />
+                  <span className="lang-text">English</span>
+                </button>
+              </div>
+            </li>
           </ul>
-            
-          <div className={`header-right-controls ${menuActive ? 'active' : ''}`}>
+          <div className="header-right-controls desktop-language">
             <div className="language-switcher">
               <button 
                 onClick={() => changeLanguage('ro')} 

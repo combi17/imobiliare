@@ -13,6 +13,7 @@
   padding: 0 2rem;
   position: relative;
   z-index: 1;
+  overflow: hidden;
 }
 
 .dubai-header {
@@ -80,7 +81,7 @@
 
 .dubai-properties-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
   margin-bottom: 3rem;
 }

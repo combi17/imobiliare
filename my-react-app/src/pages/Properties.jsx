@@ -383,6 +383,17 @@ const Properties = () => {
 }, []);
 
   useEffect(() => {
+      if (showMobileFilters) {
+          document.body.style.overflow = 'hidden';
+      } else {
+          document.body.style.overflow = 'unset'; 
+      }
+      return () => {
+          document.body.style.overflow = 'unset';
+      };
+  }, [showMobileFilters]);
+
+  useEffect(() => {
     const getProperties = async () => {
       setIsLoading(true);
 
@@ -748,6 +759,7 @@ const handleYearBuiltRangeToggle = (range) => {
 
   return (
     <div className="properties-page-container">
+      {isMobile && (
       <button 
         className="mobile-filters-toggle"
         onClick={() => setShowMobileFilters(!showMobileFilters)}
@@ -764,6 +776,7 @@ const handleYearBuiltRangeToggle = (range) => {
           </span>
         )}
       </button>
+      )}
 
       {showMobileFilters && (
         <div 
@@ -861,14 +874,18 @@ const handleYearBuiltRangeToggle = (range) => {
               selectedRanges={filters.yearBuiltRanges}
               onRangeToggle={handleYearBuiltRangeToggle}
             />
-            
-            <button 
-              className="apply-filters-btn"
-              onClick={() => setShowMobileFilters(false)}
-            >
-              Aplică Filtrele
-            </button>
           </aside>
+        )}
+
+        {isMobile && showMobileFilters && (
+            <div className="mobile-filters-footer">
+                <button 
+                  className="apply-filters-btn"
+                  onClick={() => setShowMobileFilters(false)}
+                >
+                  Aplică Filtrele
+                </button>
+            </div>
         )}
 
         {viewMode !== 'map' && (

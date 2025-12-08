@@ -40,8 +40,11 @@ const Header = () => {
   return (
     <>
       <header>
+        <div className={`header-background ${menuActive ? 'header-background-hidden' : ''}`}></div>
         <nav>
-          <div className="logo">Premium East8</div>
+          <div className={`logo ${menuActive ? 'logo-centered' : ''}`}>
+            Premium East8
+          </div>
           
           <ul className={`nav-links ${menuActive ? 'active' : ''}`}>
             <li><Link to="/" onClick={closeMenu}>{t('header.acasa')}</Link></li>
